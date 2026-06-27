@@ -1,6 +1,7 @@
 #include <linux/capability.h>
 #include <linux/cred.h>
 #include <linux/slab.h>
+#include <linux/vmalloc.h>
 #include <linux/uaccess.h>
 #include <linux/version.h>
 #include <linux/thread_info.h>
@@ -21,6 +22,10 @@
 #include "sulog/event.h"
 #include "sulog/fd.h"
 #include "supercall/supercall.h"
+
+#ifdef CONFIG_KPM
+#include "kpm/kpm.h"
+#endif
 
 static int do_grant_root(void __user *arg)
 {
@@ -688,6 +693,21 @@ static int do_disable_escape_to_root(void __user *arg)
     return 0;
 }
 
+// ENABLE_KPM - Check if KPM is enabled
+static int do_enable_kpm(void __user *arg)
+{
+    struct ksu_enable_kpm_cmd cmd;
+
+    cmd.enabled = IS_ENABLED(CONFIG_KPM);
+
+    if (copy_to_user(arg, &cmd, sizeof(cmd))) {
+        pr_err("enable_kpm: copy_to_user failed\n");
+        return -EFAULT;
+    }
+
+    return 0;
+}
+
 // IOCTL handlers mapping table
 // clang-format off
 static const struct ksu_ioctl_cmd_map ksu_ioctl_handlers[] = {
@@ -835,6 +855,20 @@ static const struct ksu_ioctl_cmd_map ksu_ioctl_handlers[] = {
         .handler = do_disable_escape_to_root, 
         .perm_check = only_root 
     },
+    { 
+        .cmd = KSU_IOCTL_ENABLE_KPM,
+        .name = "GET_ENABLE_KPM",
+        .handler = do_enable_kpm,
+        .perm_check = manager_or_root
+    },
+#ifdef CONFIG_KPM
+    { 
+        .cmd = KSU_IOCTL_KPM,
+        .name = "KPM_OPERATION",
+        .handler = do_kpm,
+        .perm_check = manager_or_root
+    },
+#endif
     {
         .cmd = 0,
         .name = NULL,

@@ -2,6 +2,7 @@ package com.nannan.nansu.ui.screen.settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -10,6 +11,7 @@ import com.nannan.nansu.ui.LocalUiMode
 import com.nannan.nansu.ui.UiMode
 import com.nannan.nansu.ui.navigation3.Navigator
 import com.nannan.nansu.ui.navigation3.Route
+import com.nannan.nansu.ui.util.rememberKpmAvailable
 import com.nannan.nansu.ui.viewmodel.SettingsViewModel
 
 @Composable
@@ -19,6 +21,7 @@ fun SettingPager(
 ) {
     val viewModel = viewModel<SettingsViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isKpmAvailable = rememberKpmAvailable()
 
     LifecycleResumeEffect(Unit) {
         viewModel.refresh()
@@ -42,10 +45,21 @@ fun SettingPager(
         onSetEnableWebDebugging = viewModel::setEnableWebDebugging,
         onSetAutoJailbreak = viewModel::setAutoJailbreak,
         onOpenAbout = { navigator.push(Route.About) },
+        onOpenKpm = { navigator.push(Route.Kpm) },
     )
 
     when (LocalUiMode.current) {
-        UiMode.Miuix -> SettingPagerMiuix(uiState, actions, bottomInnerPadding)
-        UiMode.Material -> SettingPagerMaterial(uiState, actions, bottomInnerPadding)
+        UiMode.Miuix -> SettingPagerMiuix(
+            uiState = uiState,
+            actions = actions,
+            bottomInnerPadding = bottomInnerPadding,
+            isKpmAvailable = isKpmAvailable
+        )
+        UiMode.Material -> SettingPagerMaterial(
+            uiState = uiState,
+            actions = actions,
+            bottomInnerPadding = bottomInnerPadding,
+            isKpmAvailable = isKpmAvailable
+        )
     }
 }

@@ -205,4 +205,31 @@
     <string name="color_blue_grey">Серо-голубой</string>
     <string name="color_sakura">Сакура</string>
     <string name="profile_flags_desc_no_new_privs">Предотвращает дальнейшее повышение привилегий через KernelSU в контексте этого root-профиля.</string>
+    <!-- KPM -->
+    <string name="kpm_title">KPM</string>
+    <string name="settings_kpm_summary">Управление модулями ядра KPM</string>
+    <string name="kpm_empty">На данный момент нет установленных модулей ядра</string>
+    <string name="kpm_version">Версия</string>
+    <string name="kpm_author">Автор</string>
+    <string name="kpm_uninstall">Удалить</string>
+    <string name="kpm_uninstall_success">Удаление завершено</string>
+    <string name="kpm_uninstall_failed">Не удалось удалить</string>
+    <string name="kpm_install_success">Загрузка KPM модуля завершена</string>
+    <string name="kpm_install_failed">Загрузка KPM модуля не удалась</string>
+    <string name="kpm_args">Параметры</string>
+    <string name="kpm_control">Выполнить</string>
+    <string name="close_notice">Закрыть</string>
+    <string name="kernel_module_notice">Следующие модульные функции ядра были разработаны KernelPatch и изменены для включения в него функций модуля ядра NanSU</string>
+    <string name="kpm_control_success">Успешно</string>
+    <string name="kpm_control_failed">Провален</string>
+    <string name="not_supported">Не поддерживается</string>
+    <string name="kpm_install_mode">Установка KPM</string>
+    <string name="kpm_install_mode_load">Загрузить</string>
+    <string name="kpm_install_mode_embed">Код для вставки</string>
+    <string name="kpm_install_mode_description">Пожалуйста, выберите %1\$s режим установки модуля \n\nЗагрузить: Временно загрузить модуль \nВстроенный: Окончательно установить в систему</string>
+    <string name="invalid_file_type">Неверный тип файла! Пожалуйста, выберите .kpm файл.</string>
+    <string name="confirm_uninstall_title_with_filename">Удалить</string>
+    <string name="confirm_uninstall_content">Следующие KPM будут удалены: %s</string>
+    <string name="snackbar_failed_to_check_module_file">Не удалось проверить наличие файла модуля</string>
+    <string name="cancel">Отмена</string>
 </resources>

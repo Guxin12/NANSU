@@ -167,4 +167,31 @@
     <string name="sort_by_update_time">更新時間</string>
     <string name="sort_reverse">倒序</string>
     <string name="profile_flags_desc_no_new_privs">防止在此 Root Profile 的上下文中透過 KernelSU 進一步提升權限</string>
+    <!-- KPM -->
+    <string name="kpm_title">KPM</string>
+    <string name="settings_kpm_summary">使用 KPM 管理內核模塊</string>
+    <string name="kpm_empty">當前沒有安裝內核模塊</string>
+    <string name="kpm_version">版本</string>
+    <string name="kpm_author">作者</string>
+    <string name="kpm_uninstall">卸載</string>
+    <string name="kpm_uninstall_success">卸載成功</string>
+    <string name="kpm_uninstall_failed">卸載失敗</string>
+    <string name="kpm_install_success">kpm 模塊加載成功</string>
+    <string name="kpm_install_failed">kpm 模塊加載失敗</string>
+    <string name="kpm_args">參數</string>
+    <string name="kpm_control">執行</string>
+    <string name="close_notice">關閉</string>
+    <string name="kernel_module_notice">以下內核模塊功能由 KernelPatch 開發，並經過修改後加入了 NanSU 的內核模塊功能</string>
+    <string name="kpm_control_success">成功</string>
+    <string name="kpm_control_failed">失敗</string>
+    <string name="not_supported">不支持</string>
+    <string name="kpm_install_mode">KPM 安裝</string>
+    <string name="kpm_install_mode_load">加載</string>
+    <string name="kpm_install_mode_embed">嵌入</string>
+    <string name="kpm_install_mode_description">請選擇：%1$s 模塊安裝模式\n\n加載：臨時加載模塊\n嵌入：永久安裝到系統中</string>
+    <string name="invalid_file_type">文件類型不正確！請選擇 .kpm 文件</string>
+    <string name="confirm_uninstall_title_with_filename">卸載</string>
+    <string name="confirm_uninstall_content">以下 KPM 將被卸載：%s</string>
+    <string name="snackbar_failed_to_check_module_file">無法檢查模塊文件是否存在</string>
+    <string name="cancel">取消</string>
 </resources>

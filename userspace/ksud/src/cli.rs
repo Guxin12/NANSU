@@ -144,6 +144,12 @@ enum Commands {
         #[command(subcommand)]
         command: Initrc,
     },
+    /// KPM module manager
+    #[cfg(target_arch = "aarch64")]
+    Kpm {
+        #[command(subcommand)]
+        command: kpm_cmd::Kpm,
+    },
 }
 
 #[derive(clap::Subcommand, Debug)]
@@ -477,6 +483,30 @@ enum Initrc {
     Refresh,
 }
 
+#[cfg(target_arch = "aarch64")]
+mod kpm_cmd {
+    use clap::Subcommand;
+    use std::path::PathBuf;
+
+    #[derive(Subcommand, Debug)]
+    pub enum Kpm {
+        /// Load a KPM module: load <path> [args]
+        Load { path: PathBuf, args: Option<String> },
+        /// Unload a KPM module: unload <name>
+        Unload { name: String },
+        /// Get number of loaded modules
+        Num,
+        /// List loaded KPM modules
+        List,
+        /// Get info of a KPM module: info <name>
+        Info { name: String },
+        /// Send control command to a KPM module: control <name> <args>
+        Control { name: String, args: String },
+        /// Print KPM Loader version
+        Version,
+    }
+}
+
 pub fn run() -> Result<()> {
     android_logger::init_once(
         Config::default()
@@ -790,6 +820,25 @@ pub fn run() -> Result<()> {
         Commands::Initrc { command } => match command {
             Initrc::Refresh => regenerate_preinit_rc(),
         },
+        #[cfg(target_arch = "aarch64")]
+        Commands::Kpm { command } => {
+            use crate::cli::kpm_cmd::Kpm;
+            match command {
+                Kpm::Load { path, args } => {
+                    crate::kpm::load_module(path.to_str().unwrap(), args.as_deref())
+                }
+                Kpm::Unload { name } => crate::kpm::unload_module(name),
+                Kpm::Num => crate::kpm::num().map(|_| ()),
+                Kpm::List => crate::kpm::list(),
+                Kpm::Info { name } => crate::kpm::info(name),
+                Kpm::Control { name, args } => {
+                    let ret = crate::kpm::control(name, args)?;
+                    println!("{ret}");
+                    Ok(())
+                }
+                Kpm::Version => crate::kpm::version(),
+            }
+        }
     };
 
     if let Err(e) = &result {

@@ -74,6 +74,7 @@ import com.nannan.nansu.ui.screen.flash.FlashIt
 import com.nannan.nansu.ui.screen.flash.FlashScreen
 import com.nannan.nansu.ui.screen.home.HomePager
 import com.nannan.nansu.ui.screen.install.InstallScreen
+import com.nannan.nansu.ui.screen.kpm.KpmScreen
 import com.nannan.nansu.ui.screen.module.ModulePager
 import com.nannan.nansu.ui.screen.modulerepo.ModuleRepoDetailScreen
 import com.nannan.nansu.ui.screen.modulerepo.ModuleRepoScreen
@@ -197,6 +198,7 @@ class MainActivity : ComponentActivity() {
                                 entry<Route.SuperUser> { mainScreenEntry() }
                                 entry<Route.Module> { mainScreenEntry() }
                                 entry<Route.Settings> { mainScreenEntry() }
+                                entry<Route.Kpm> { KpmScreen() }
                             }
                         )
                     }

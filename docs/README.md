@@ -1,4 +1,4 @@
-**English** | [Español](README_ES.md) | [简体中文](README_CN.md) | [繁體中文](README_TW.md)
+**English** | [简体中文](README_CN.md) | [繁體中文](README_TW.md)
 # KernelSU
 
 <img src="https://kernelsu.org/logo.png" style="width: 96px;" alt="logo">

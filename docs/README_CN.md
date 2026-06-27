@@ -28,7 +28,7 @@
 - 需要 CONFIG_KPM=y
 - Non-GKI 设备需要 CONFIG_KALLSYMS=y and CONFIG_KALLSYMS_ALL=y
 - 对于低于 4.19 的内核，需要从 4.19 的 set_memory.h 进行反向移植。
-- 需要使用ShirkNeko的[补丁](https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch) 修补构建产物Image。
+- 需要使用ShirkNeko的KPM开源仓库修补构建产物Image。
 
 ## 兼容状态
 

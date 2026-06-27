@@ -25,6 +25,8 @@ mod feature;
 #[cfg(target_os = "android")]
 mod init_event;
 #[cfg(target_os = "android")]
+mod kpm;
+#[cfg(target_os = "android")]
 mod ksucalls;
 #[cfg(target_os = "android")]
 mod late_load;
@@ -52,8 +54,6 @@ mod sulog;
 mod unload;
 #[cfg(target_os = "android")]
 mod utils;
-#[cfg(target_os = "android")]
-mod kpm;
 
 #[cfg(target_os = "android")]
 #[allow(nonstandard_style, unused, unsafe_op_in_unsafe_fn)]

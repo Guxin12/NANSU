@@ -145,7 +145,7 @@ enum Commands {
         command: Initrc,
     },
     /// KPM module manager
-    #[cfg(target_arch = "aarch64")]
+    #[cfg(target_os = "android")]
     Kpm {
         #[command(subcommand)]
         command: kpm_cmd::Kpm,
@@ -483,7 +483,7 @@ enum Initrc {
     Refresh,
 }
 
-#[cfg(target_arch = "aarch64")]
+#[cfg(target_os = "android")]
 mod kpm_cmd {
     use clap::Subcommand;
     use std::path::PathBuf;
@@ -820,7 +820,7 @@ pub fn run() -> Result<()> {
         Commands::Initrc { command } => match command {
             Initrc::Refresh => regenerate_preinit_rc(),
         },
-        #[cfg(target_arch = "aarch64")]
+        #[cfg(target_os = "android")]
         Commands::Kpm { command } => {
             use crate::cli::kpm_cmd::Kpm;
             match command {

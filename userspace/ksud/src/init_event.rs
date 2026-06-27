@@ -1,4 +1,4 @@
-#[cfg(target_arch = "aarch64")]
+#[cfg(target_os = "android")]
 use crate::kpm;
 use crate::module::{handle_updated_modules, prune_modules};
 use crate::utils::{is_safe_mode, switch_mnt_ns};
@@ -101,7 +101,7 @@ pub fn on_post_data_fs() -> Result<()> {
         warn!("init features failed: {e}");
     }
 
-    #[cfg(target_arch = "aarch64")]
+    #[cfg(target_os = "android")]
     if let Err(e) = kpm::booted_load() {
         warn!("KPM: Failed to start KPM watcher: {e}");
     }

@@ -316,4 +316,5 @@
     <string name="confirm_uninstall_content">The following KPM will be uninstalled: %s</string>
     <string name="snackbar_failed_to_check_module_file">Unable to check if module file exists</string>
     <string name="cancel">Cancel</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -11,6 +11,13 @@ config KSU
 	  To compile as a module, choose M here: the
 	  module will be called kernelsu.
 
+config KSU_DEBUG
+	bool "KernelSU debug mode"
+	depends on KSU
+	default n
+	help
+	  Enable KernelSU debug mode.
+
 config KPM
     bool "Enable KPM"
     depends on KSU && 64BIT
@@ -21,13 +28,6 @@ config KPM
       but it may affect system stability.
     select KALLSYMS
     select KALLSYMS_ALL
-
-config KSU_DEBUG
-	bool "KernelSU debug mode"
-	depends on KSU
-	default n
-	help
-	  Enable KernelSU debug mode.
 
 config KSU_DISABLE_MANAGER
 	bool "Disable KernelSU manager integration"

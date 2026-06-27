@@ -11,6 +11,17 @@ config KSU
 	  To compile as a module, choose M here: the
 	  module will be called kernelsu.
 
+config KPM
+    bool "Enable KPM"
+    depends on KSU && 64BIT
+    default n
+    help
+      Enabling this option will activate the KPM feature.
+      This option is suitable for scenarios where you need to force KPM to be enabled.
+      but it may affect system stability.
+    select KALLSYMS
+    select KALLSYMS_ALL
+
 config KSU_DEBUG
 	bool "KernelSU debug mode"
 	depends on KSU
@@ -34,16 +45,5 @@ config KSU_DISABLE_POLICY
 	  Disable per-app root/non-root profile customization.
 	  Escalation will always use the default full root profile, and
 	  non-root handling will follow the global umount policy only.
-
-config KPM
-    bool "Enable KPM"
-    depends on KSU && 64BIT
-    default n
-    help
-      Enabling this option will activate the KPM feature.
-      This option is suitable for scenarios where you need to force KPM to be enabled.
-      but it may affect system stability.
-    select KALLSYMS
-    select KALLSYMS_ALL
 
 endmenu

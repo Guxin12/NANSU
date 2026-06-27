@@ -18,6 +18,18 @@
 - 基于 [metamodules](https://kernelsu.org/zh_CN/guide/metamodule.html) 的模块系统：可插拔的模块架构。
 - [App Profile](https://kernelsu.org/zh_CN/guide/app-profile.html): 把 Root 权限关进笼子里。
 
+## KPM支持
+- 移植加入SukiSU Ultra实现的KPM功能,基于KernelPatch开发。
+- 开源仓库: https://github.com/ShirkNeko/SukiSU_KernelPatch_patch
+
+- KPM 模板: https://github.com/udochina/KPM-Build-Anywhere
+
+- Note
+需要 CONFIG_KPM=y
+Non-GKI 设备需要 CONFIG_KALLSYMS=y and CONFIG_KALLSYMS_ALL=y
+对于低于 4.19 的内核，需要从 4.19 的 set_memory.h 进行反向移植。
+需要使用ShirkNeko的补丁(https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch)修补构建产物Image。
+
 ## 兼容状态
 
 KernelSU 官方支持 GKI 2.0 的设备（内核版本5.10以上）；旧内核也是兼容的（最低4.14+），不过需要自己编译内核。

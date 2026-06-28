@@ -1,10 +1,6 @@
 #ifndef __KPM_H
 #define __KPM_H
 
-#include <linux/types.h>
-#include <linux/ioctl.h>
-#include "uapi/supercall.h"
-
 int handle_kpm(unsigned long control_code, unsigned long arg3,
                       unsigned long arg4, unsigned long result_code);
 int is_kpm_control_code(unsigned long control_code);

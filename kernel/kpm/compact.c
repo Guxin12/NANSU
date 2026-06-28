@@ -24,11 +24,6 @@
 #include <linux/version.h>
 #include <linux/export.h>
 #include <linux/slab.h>
-#include "infra/symbol_resolver.h"
-#include "kpm.h"
-#include "compact.h"
-#include "policy/allowlist.h"
-#include "manager/manager_identity.h"
 
 static int is_su_allow_uid(uid_t uid)
 {
@@ -93,7 +88,7 @@ unsigned long compact_find_symbol(const char *name)
             return (unsigned long)symbol->addr;
     }
 
-    addr = find_kernel_symbol_exact(name);
+    addr = kallsyms_lookup_name(name);
     if (addr)
         return addr;
 

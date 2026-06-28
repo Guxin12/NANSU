@@ -23,10 +23,6 @@
 #include "sulog/fd.h"
 #include "supercall/supercall.h"
 
-#ifdef CONFIG_KPM
-#include "kpm/kpm.h"
-#endif
-
 static int do_grant_root(void __user *arg)
 {
     int ret;

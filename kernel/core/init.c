@@ -35,6 +35,15 @@
 #endif
 #endif
 
+#ifdef CONFIG_KPM
+#include "kpm/kpm.h"
+#include "kpm/compact.h"
+#include "kpm/super_access.h"
+#include "kpm/kpm.c"
+#include "kpm/compact.c"
+#include "kpm/super_access.c"
+#endif
+
 // workaround for A12-5.10 kernel
 // Some third-party kernel (e.g. linegaeOS) uses wrong toolchain, which supports
 // CC_HAVE_STACKPROTECTOR_SYSREG while gki's toolchain doesn't.

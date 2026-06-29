@@ -169,27 +169,28 @@ fun SettingPagerMaterial(
                             }
                         )
                     }
+                )                
+            }
+            
+            val kpmTitle = stringResource(id = R.string.kpm_title)
+            if (isKpmAvailable) {
+                SegmentedColumn(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    content = listOf {
+                        SegmentedListItem(
+                            onClick = actions.onOpenKpm,
+                            headlineContent = { Text(kpmTitle) },
+                            supportingContent = { Text(stringResource(id = R.string.settings_kpm_summary)) },
+                            leadingContent = { Icon(Icons.Filled.Fence, kpmTitle) },
+                            trailingContent = {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    null
+                                )
+                            }
+                        )
+                    }
                 )
-                val kpmTitle = stringResource(id = R.string.kpm_title)
-                if (isKpmAvailable) {
-                    SegmentedColumn(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        content = listOf {
-                            SegmentedListItem(
-                                onClick = actions.onOpenKpm,
-                                headlineContent = { Text(kpmTitle) },
-                                supportingContent = { Text(stringResource(id = R.string.settings_kpm_summary)) },
-                                leadingContent = { Icon(Icons.Filled.Fence, kpmTitle) },
-                                trailingContent = {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                        null
-                                    )
-                                }
-                            )
-                        }
-                    )
-                }
             }
 
             KsuIsValid {

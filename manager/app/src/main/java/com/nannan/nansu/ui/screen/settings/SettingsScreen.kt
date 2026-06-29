@@ -19,6 +19,7 @@ fun SettingPager(
     navigator: Navigator,
     bottomInnerPadding: Dp
 ) {
+    val context = LocalContext.current
     val viewModel = viewModel<SettingsViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isKpmAvailable = rememberKpmAvailable()

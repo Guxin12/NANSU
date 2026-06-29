@@ -202,7 +202,9 @@ fun SettingPagerMiuix(
                                 onClick = actions.onOpenProfileTemplate
                             )
                         }
-                        if (isKpmAvailable) {
+                    }
+                    
+                   if (isKpmAvailable) {
                             Card(
                                 modifier = Modifier
                                     .padding(top = 12.dp)
@@ -226,7 +228,6 @@ fun SettingPagerMiuix(
                                 )
                             }
                         }
-                    }
 
                     KsuIsValid {
                         Card(

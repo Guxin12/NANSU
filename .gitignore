@@ -1,5 +1,7 @@
 .idea
 .vscode
+*.patch
+*.bak
 CLAUDE.md
 AGENTS.md
 .DS_Store

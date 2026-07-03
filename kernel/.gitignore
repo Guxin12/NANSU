@@ -15,6 +15,7 @@ compile_commands.json
 .*.cmd
 *.orig
 *.bak
+*.patch
 *.o
 *.rej
 .tmp_versions/

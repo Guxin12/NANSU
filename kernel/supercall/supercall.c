@@ -12,7 +12,9 @@
 #include <linux/version.h>
 
 #include "uapi/supercall.h"
+#ifdef CONFIG_KPM
 #include "kpm/kpm.h"
+#endif
 #include "supercall/internal.h"
 #include "arch.h"
 #include "util.h"

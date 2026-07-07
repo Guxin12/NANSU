@@ -66,6 +66,7 @@ import me.weishu.kernelsu.ui.screen.executemoduleaction.ExecuteModuleActionScree
 import me.weishu.kernelsu.ui.screen.flash.FlashScreen
 import me.weishu.kernelsu.ui.screen.home.HomePager
 import me.weishu.kernelsu.ui.screen.install.InstallScreen
+import me.weishu.kernelsu.ui.screen.kpm.KpmScreen
 import me.weishu.kernelsu.ui.screen.module.ModulePager
 import me.weishu.kernelsu.ui.screen.modulerepo.ModuleRepoDetailScreen
 import me.weishu.kernelsu.ui.screen.modulerepo.ModuleRepoScreen
@@ -187,6 +188,7 @@ class MainActivity : ComponentActivity() {
                                 entry<Route.SuperUser> { mainScreenEntry() }
                                 entry<Route.Module> { mainScreenEntry() }
                                 entry<Route.Settings> { mainScreenEntry() }
+                                entry<Route.Kpm> { KpmScreen() }
                             }
                         )
                     }

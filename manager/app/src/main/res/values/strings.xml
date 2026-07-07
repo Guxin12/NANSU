@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">NanSU</string>
     <string name="home">Home</string>
     <string name="home_not_installed">Not installed</string>
     <string name="home_click_to_install">Tap to install</string>
@@ -292,4 +293,32 @@
     <string name="profile_flags_desc_no_new_privs">Prevent further privilege escalation via KernelSU from within the context of this root profile.</string>
     <string name="module_shortcut_copy_scheme">Copy URL scheme</string>
     <string name="module_shortcut_scheme_copied">URL scheme copied</string>
+    <!-- KPM -->
+    <string name="kpm_title">KPM</string>
+    <string name="settings_kpm_summary">Manage kernel modules with KPM</string>
+    <string name="kpm_empty">No installed kernel modules at this time</string>
+    <string name="kpm_version">Version</string>
+    <string name="kpm_author">Author</string>
+    <string name="kpm_uninstall">Uninstall</string>
+    <string name="kpm_uninstall_success">Uninstalled successfully</string>
+    <string name="kpm_uninstall_failed">Failed to uninstall</string>
+    <string name="kpm_install_success">Load of KPM module successful</string>
+    <string name="kpm_install_failed">Load of KPM module failed</string>
+    <string name="kpm_args">Parameters</string>
+    <string name="kpm_control">Execute</string>
+    <string name="close_notice">Close</string>
+    <string name="kernel_module_notice">The following kernel module functions were developed by KernelPatch and modified to include the kernel module functions of SukiSU Ultra</string>
+    <string name="kpm_control_success">Success</string>
+    <string name="kpm_control_failed">Failed</string>
+    <string name="not_supported">Unsupported</string>
+    <string name="kpm_install_mode">KPM Install</string>
+    <string name="kpm_install_mode_load">Load</string>
+    <string name="kpm_install_mode_embed">Embed</string>
+    <string name="kpm_install_mode_description">Please select: %1\$s Module Installation Mode \n\nLoad: Temporarily load the module \nEmbedded: Permanently install into the system</string>
+    <string name="invalid_file_type">Incorrect file type! Please select .kpm file</string>
+    <string name="confirm_uninstall_title_with_filename">Uninstall</string>
+    <string name="confirm_uninstall_content">The following KPM will be uninstalled: %s</string>
+    <string name="snackbar_failed_to_check_module_file">Unable to check if module file exists</string>
+    <string name="cancel">Cancel</string>
+    <string name="refresh">Refresh</string>
 </resources>

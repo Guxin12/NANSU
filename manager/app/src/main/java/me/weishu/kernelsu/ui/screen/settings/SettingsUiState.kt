@@ -69,4 +69,5 @@ data class SettingsScreenActions(
     val onSetEnableWebDebugging: (Boolean) -> Unit,
     val onSetAutoJailbreak: (Boolean) -> Unit,
     val onOpenAbout: () -> Unit,
+    val onOpenKpm: () -> Unit,
 )

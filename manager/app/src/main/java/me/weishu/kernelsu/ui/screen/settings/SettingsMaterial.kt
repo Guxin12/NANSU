@@ -68,6 +68,7 @@ fun SettingPagerMaterial(
     uiState: SettingsUiState,
     actions: SettingsScreenActions,
     bottomInnerPadding: Dp,
+    isKpmAvailable: Boolean,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val snackBarHost = remember { SnackbarHostState() }
@@ -158,6 +159,27 @@ fun SettingPagerMaterial(
                             headlineContent = { Text(profileTemplate) },
                             supportingContent = { Text(stringResource(id = R.string.settings_profile_template_summary)) },
                             leadingContent = { Icon(Icons.Filled.Fence, profileTemplate) },
+                            trailingContent = {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    null
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+
+            val kpmTitle = stringResource(id = R.string.kpm_title)
+            if (isKpmAvailable) {
+                SegmentedColumn(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    content = listOf {
+                        SegmentedListItem(
+                            onClick = actions.onOpenKpm,
+                            headlineContent = { Text(kpmTitle) },
+                            supportingContent = { Text(stringResource(id = R.string.settings_kpm_summary)) },
+                            leadingContent = { Icon(Icons.Filled.Fence, kpmTitle) },
                             trailingContent = {
                                 Icon(
                                     Icons.AutoMirrored.Filled.KeyboardArrowRight,

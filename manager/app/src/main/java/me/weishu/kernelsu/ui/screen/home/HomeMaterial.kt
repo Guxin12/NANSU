@@ -96,9 +96,6 @@ fun HomePagerMaterial(
                     )
                 )
             }
-            if (state.showGkiWarning) {
-                WarningCard(stringResource(id = R.string.home_gki_warning))
-            }
             if (state.showUAPIMisMatchWarning) {
                 WarningCard(
                     stringResource(
@@ -223,7 +220,7 @@ private fun StatusCard(
             when (state.lkmMode) {
                 null -> ""
                 true -> "LKM"
-                else -> "GKI"
+                else -> "Built-in"
             }
         } else ""
 

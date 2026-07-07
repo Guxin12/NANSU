@@ -131,9 +131,6 @@ fun HomePagerMiuix(
                                 )
                             )
                         }
-                        if (state.showGkiWarning) {
-                            WarningCard(stringResource(id = R.string.home_gki_warning))
-                        }
                         if (state.showUAPIMisMatchWarning) {
                             WarningCard(
                                 stringResource(
@@ -251,7 +248,7 @@ private fun StatusCard(
                 val workingMode = when (state.lkmMode) {
                     null -> ""
                     true -> " <LKM>"
-                    else -> " <GKI>"
+                    else -> " <Built-in>"
                 }
                 val workingText = "${stringResource(id = R.string.home_working)}$workingMode$workingState"
 

@@ -3,6 +3,7 @@
 CLAUDE.md
 AGENTS.md
 .DS_Store
+*.bak
 /target
 .cargo/config.toml
 __pycache__

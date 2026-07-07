@@ -16,6 +16,8 @@ compile_commands.json
 .tmp_versions/
 libs/
 obj/
+*.orig
+*.bak
 
 CLAUDE.md
 .ddk-version

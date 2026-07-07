@@ -319,9 +319,9 @@
   integrity sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==
 
 "@iconify-json/simple-icons@^1.2.21":
-  version "1.2.87"
-  resolved "https://registry.yarnpkg.com/@iconify-json/simple-icons/-/simple-icons-1.2.87.tgz#f8929f5eb22523d5f8ef68a223f88a3b5c1392e1"
-  integrity sha512-8YciStObhSji3OZFmWAWK6kBujyqO5bLCxeDwLxf3CR3F4PVelq7keC2LBvgTqviWzSTysj5/g4PCFLiAMVGsw==
+  version "1.2.89"
+  resolved "https://registry.yarnpkg.com/@iconify-json/simple-icons/-/simple-icons-1.2.89.tgz#f4f98b2ac14f85557b2b6efca29fa7356adb4cc7"
+  integrity sha512-hRaCY5s2G5oWAIhc4LCGYn6g6RrwLL4zhoLOT+KUO3joVCxVlZKA+839bv/47Nbe9/ZD4UA6dznZ4XPYcI53wA==
   dependencies:
     "@iconify/types" "*"
 
@@ -986,9 +986,9 @@ postcss@^8.4.43, postcss@^8.5.15:
     source-map-js "^1.2.1"
 
 preact@^10.0.0:
-  version "10.29.3"
-  resolved "https://registry.yarnpkg.com/preact/-/preact-10.29.3.tgz#36f96b7a8edc2fccea76daa5e7545597dc15ab28"
-  integrity sha512-D9NL1GAnJZhc3RndVs4gDdxEeU9TcHgywMrhhOsnpdlvFjdbx0gAsLUnH6JEhlJH5giL7Tx5biWPUSEXE/HPzw==
+  version "10.29.4"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.29.4.tgz#186cd3ce0fea34e5d1930881238c16e1fb902253"
+  integrity sha512-GMpwh9+NJ8tSmqwIaVyFRQkiKfBEzQ+k7r7tle4W+kaJ+7wJiB9hFz9BixAomMtenPPSBfM4bZhXozGxhf0uFQ==
 
 property-information@^7.0.0:
   version "7.2.0"

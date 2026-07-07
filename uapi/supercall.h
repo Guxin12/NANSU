@@ -148,6 +148,25 @@ static const __u8 KSU_UMOUNT_WIPE = 0; /* ignore everything and wipe list */
 static const __u8 KSU_UMOUNT_ADD = 1; /* add entry (path + flags) */
 static const __u8 KSU_UMOUNT_DEL = 2; /* delete entry, strcmp */
 
+struct ksu_enable_kpm_cmd {
+    __u8 enabled; // Output: true if KPM is enabled
+};
+
+static const __u32 KPM_LOAD = 1;
+static const __u32 KPM_UNLOAD = 2;
+static const __u32 KPM_NUM = 3;
+static const __u32 KPM_LIST = 4;
+static const __u32 KPM_INFO = 5;
+static const __u32 KPM_CONTROL = 6;
+static const __u32 KPM_VERSION = 7;
+
+struct ksu_kpm_cmd {
+    __aligned_u64 __user control_code;
+    __aligned_u64 __user arg1;
+    __aligned_u64 __user arg2;
+    __aligned_u64 __user result_code;
+};
+
 /* IOCTL command definitions */
 static const __u32 KSU_IOCTL_GRANT_ROOT = _IOC(_IOC_NONE, 'K', 1, 0);
 static const __u32 KSU_IOCTL_GET_INFO = _IOR('K', 2, struct ksu_get_info_cmd);
@@ -176,5 +195,8 @@ static const __u32 KSU_IOCTL_ADD_TRY_UMOUNT = _IOC(_IOC_WRITE, 'K', 18, 0);
 static const __u32 KSU_IOCTL_SET_INIT_PGRP = _IO('K', 19);
 static const __u32 KSU_IOCTL_GET_SULOG_FD = _IOW('K', 20, struct ksu_get_sulog_fd_cmd);
 static const __u32 KSU_IOCTL_DISABLE_ESCAPE_TO_ROOT = _IO('K', 21);
+
+static const __u32 KSU_IOCTL_ENABLE_KPM = _IOC(_IOC_READ, 'K', 102, 0);
+static const __u32 KSU_IOCTL_KPM = _IOC(_IOC_READ | _IOC_WRITE, 'K', 200, 0);
 
 #endif

@@ -152,13 +152,13 @@ struct ksu_enable_kpm_cmd {
     __u8 enabled; // Output: true if KPM is enabled
 };
 
-static const __u32 KPM_LOAD = 1;
-static const __u32 KPM_UNLOAD = 2;
-static const __u32 KPM_NUM = 3;
-static const __u32 KPM_LIST = 4;
-static const __u32 KPM_INFO = 5;
-static const __u32 KPM_CONTROL = 6;
-static const __u32 KPM_VERSION = 7;
+static const __u32 SUKISU_KPM_LOAD = 1;
+static const __u32 SUKISU_KPM_UNLOAD = 2;
+static const __u32 SUKISU_KPM_NUM = 3;
+static const __u32 SUKISU_KPM_LIST = 4;
+static const __u32 SUKISU_KPM_INFO = 5;
+static const __u32 SUKISU_KPM_CONTROL = 6;
+static const __u32 SUKISU_KPM_VERSION = 7;
 
 struct ksu_kpm_cmd {
     __aligned_u64 __user control_code;

@@ -67,26 +67,22 @@ struct CompactAddressSymbol {
 
 unsigned long sukisu_compact_find_symbol(const char *name);
 
-static struct CompactAddressSymbol address_symbol[] = {
-    { "kallsyms_lookup_name", &kallsyms_lookup_name },
-    { "compact_find_symbol", &sukisu_compact_find_symbol },
-    { "is_run_in_sukisu_ultra", (void *)1 },
-    { "is_su_allow_uid", &sukisu_is_su_allow_uid },
-    { "get_ap_mod_exclude", &sukisu_get_ap_mod_exclude },
-    { "is_uid_should_umount", &sukisu_is_uid_should_umount },
-    { "is_current_uid_manager", &sukisu_is_current_uid_manager },
-    { "get_manager_uid", &sukisu_get_manager_uid },
-    { "sukisu_set_manager_uid", &sukisu_set_manager_uid }
-};
+static struct CompactAddressSymbol address_symbol[] = { { "kallsyms_lookup_name", &kallsyms_lookup_name },
+                                                        { "compact_find_symbol", &sukisu_compact_find_symbol },
+                                                        { "is_run_in_sukisu_ultra", (void *)1 },
+                                                        { "is_su_allow_uid", &sukisu_is_su_allow_uid },
+                                                        { "get_ap_mod_exclude", &sukisu_get_ap_mod_exclude },
+                                                        { "is_uid_should_umount", &sukisu_is_uid_should_umount },
+                                                        { "is_current_uid_manager", &sukisu_is_current_uid_manager },
+                                                        { "get_manager_uid", &sukisu_get_manager_uid },
+                                                        { "sukisu_set_manager_uid", &sukisu_set_manager_uid } };
 
 unsigned long sukisu_compact_find_symbol(const char *name)
 {
     int i;
     unsigned long addr;
 
-    for (i = 0;
-         i < (sizeof(address_symbol) / sizeof(struct CompactAddressSymbol));
-         i++) {
+    for (i = 0; i < (sizeof(address_symbol) / sizeof(struct CompactAddressSymbol)); i++) {
         struct CompactAddressSymbol *symbol = &address_symbol[i];
 
         if (strcmp(name, symbol->symbol_name) == 0)

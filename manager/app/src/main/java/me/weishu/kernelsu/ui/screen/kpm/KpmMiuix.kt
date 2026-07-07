@@ -244,10 +244,6 @@ private fun KpmList(
     bottomInnerPadding: Dp,
     layoutDirection: LayoutDirection
 ) {
-    val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-    var isNoticeClosed by remember { mutableStateOf(sharedPreferences.getBoolean("is_notice_closed", false)) }
-
     val refreshPulling = stringResource(R.string.refresh_pulling)
     val refreshRelease = stringResource(R.string.refresh_release)
     val refreshRefresh = stringResource(R.string.refresh_refresh)
@@ -295,53 +291,6 @@ private fun KpmList(
             ),
             overscrollEffect = null,
         ) {
-            if (!isNoticeClosed) {
-                item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Info,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .size(24.dp),
-                                tint = colorScheme.onBackground
-                            )
-
-                            Text(
-                                text = stringResource(R.string.kernel_module_notice),
-                                modifier = Modifier.weight(1f),
-                                color = colorScheme.onBackground
-                            )
-
-                            IconButton(
-                                onClick = {
-                                    isNoticeClosed = true
-                                    sharedPreferences.edit { putBoolean("is_notice_closed", true) }
-                                },
-                                modifier = Modifier.size(24.dp),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = stringResource(R.string.close_notice),
-                                    tint = colorScheme.onBackground
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
             items(state.moduleList) { module ->
                 KpmModuleItem(
                     module = module,

@@ -10,3 +10,4 @@ __pycache__
 /repack-config.json
 *.bak
 *.orig
+*.patch

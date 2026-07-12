@@ -18,6 +18,8 @@ libs/
 obj/
 *.orig
 *.bak
+*.patch
+*.rej
 
 CLAUDE.md
 .ddk-version

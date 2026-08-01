@@ -248,8 +248,8 @@ private fun StatusCard(
                 }
                 val workingMode = when (state.lkmMode) {
                     null -> null
-                    true -> " <LKM>"
-                    else -> " <Built-in>"
+                    true -> "<LKM>"
+                    else -> "<Built-in>"
                 }
                 val workingText = "${stringResource(id = R.string.home_working)}$workingState"
 

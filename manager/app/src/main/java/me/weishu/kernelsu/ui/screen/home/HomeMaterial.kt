@@ -219,8 +219,8 @@ private fun StatusCard(
         val workingMode = if (ksuActive) {
             when (state.lkmMode) {
                 null -> ""
-                true -> " <LKM>"
-                else -> " <Built-in>"
+                true -> "LKM"
+                else -> "Built-in"
             }
         } else ""
 

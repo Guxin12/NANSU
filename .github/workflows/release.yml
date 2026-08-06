@@ -1,18 +1,27 @@
 name: Release
+
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release 的 Tag 名称 (例如 v1.0.0)'
+        required: true
+        type: string
 
 jobs:
   build-manager:
     uses: ./.github/workflows/build-manager.yml
     secrets: inherit
+
   release:
     needs:
       - build-manager
     runs-on: ubuntu-latest
+    permissions:
+      contents: write          # 授予创建 Release 和 Tag 的权限
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v8
@@ -35,9 +44,11 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
-      - name: release
+      - name: Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          create_release: true   # 如果 tag 不存在则自动创建
           files: |
             manager/*.apk
             android*-lkm/*_kernelsu.ko

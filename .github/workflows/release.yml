@@ -21,25 +21,39 @@ jobs:
       - build-manager
     runs-on: ubuntu-latest
     permissions:
-      contents: write          # 授予创建 Release 和 Tag 的权限
+      contents: write
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v8
 
-      - name: Rename ksud
+      - name: Prepare ksud files
         run: |
           mkdir -p ksud
           for dir in ./ksud-*; do
-              if [ -d "$dir" ]; then
-                 echo "----- Rename $dir -----"
-                 ksud_platform_name=$(basename "$dir")
-                 find "$dir" -type f -name "ksud" -path "*/release/*" | while read -r ksud_file; do
-                   if [ -f "$ksud_file" ]; then
-                     mv "$ksud_file" "ksud/$ksud_platform_name"
-                   fi
-                 done
-              fi
+            if [ -d "$dir" ] && [ -f "$dir/ksud" ]; then
+              platform=$(basename "$dir" | sed 's/^ksud-//')
+              mv "$dir/ksud" "ksud/$platform"
+            fi
           done
+
+      - name: Prepare LKM files
+        run: |
+          mkdir -p lkm
+          for dir in ./*-lkm; do
+            if [ -d "$dir" ]; then
+              arch=$(basename "$dir" | cut -d'-' -f1)
+              mkdir -p "lkm/$arch"
+              for ko in "$dir"/*.ko; do
+                [ -f "$ko" ] && cp "$ko" "lkm/$arch/"
+              done
+            fi
+          done
+
+      - name: Prepare ksuinit files
+        run: |
+          mkdir -p ksuinit
+          [ -f "ksuinit-aarch64/ksuinit" ] && cp "ksuinit-aarch64/ksuinit" "ksuinit/ksuinit-aarch64"
+          [ -f "ksuinit-x86_64/ksuinit" ] && cp "ksuinit-x86_64/ksuinit" "ksuinit/ksuinit-x86_64"
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -48,9 +62,9 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          create_release: true   # 如果 tag 不存在则自动创建
+          create_release: true
           files: |
             manager/*.apk
-            android*-lkm/*_kernelsu.ko
-            ksud/ksud-*
-            ksuinit/**
+            lkm/**/*.ko
+            ksud/*
+            ksuinit/*

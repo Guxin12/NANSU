@@ -36,15 +36,17 @@ jobs:
             fi
           done
 
-      - name: Prepare LKM files
+      - name: Prepare LKM files (rename to avoid conflicts)
         run: |
           mkdir -p lkm
           for dir in ./*-lkm; do
             if [ -d "$dir" ]; then
               arch=$(basename "$dir" | cut -d'-' -f1)
-              mkdir -p "lkm/$arch"
               for ko in "$dir"/*.ko; do
-                [ -f "$ko" ] && cp "$ko" "lkm/$arch/"
+                [ -f "$ko" ] || continue
+                base=$(basename "$ko")                     # 例如 android16-6.12_kernelsu.ko
+                name="${base%_kernelsu.ko}_${arch}.ko"    # 变为 android16-6.12_aarch64.ko
+                cp "$ko" "lkm/$name"
               done
             fi
           done
@@ -65,6 +67,6 @@ jobs:
           create_release: true
           files: |
             manager/*.apk
-            lkm/**/*.ko
+            lkm/*.ko
             ksud/*
             ksuinit/*

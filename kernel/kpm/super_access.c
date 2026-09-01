@@ -188,8 +188,8 @@ static struct DynamicStructInfo *dynamic_struct_infos[] = { STRUCT_INFO(mount),
  */
 int sukisu_super_find_struct(const char *struct_name, size_t *out_size, int *out_members)
 {
-    size_t i; // for C89 standard or later
-    for (i = 0; i < (sizeof(dynamic_struct_infos) / sizeof(dynamic_struct_infos[0])); i++) {
+    size_t i;
+    for (i = 0; i < ARRAY_SIZE(dynamic_struct_infos); i++) {
         struct DynamicStructInfo *info = dynamic_struct_infos[i];
 
         if (strcmp(struct_name, info->name) == 0) {
@@ -215,19 +215,19 @@ EXPORT_SYMBOL(sukisu_super_find_struct);
  */
 int sukisu_super_access(const char *struct_name, const char *member_name, size_t *out_offset, size_t *out_size)
 {
-    size_t i; // for C89 standard or later
-    for (i = 0; i < (sizeof(dynamic_struct_infos) / sizeof(dynamic_struct_infos[0])); i++) {
+    size_t i;
+    for (i = 0; i < ARRAY_SIZE(dynamic_struct_infos); i++) {
         struct DynamicStructInfo *info = dynamic_struct_infos[i];
 
         if (strcmp(struct_name, info->name) == 0) {
-            size_t i1; // for C89 standard or later
-            for (i1 = 0; i1 < info->count; i1++) {
-                if (strcmp(info->members[i1].name, member_name) == 0) {
+            size_t j;
+            for (j = 0; j < info->count; j++) {
+                if (strcmp(info->members[j].name, member_name) == 0) {
                     if (out_offset)
-                        *out_offset = info->members[i].offset;
+                        *out_offset = info->members[j].offset;
 
                     if (out_size)
-                        *out_size = info->members[i].size;
+                        *out_size = info->members[j].size;
 
                     return 0;
                 }
@@ -255,15 +255,15 @@ int sukisu_super_container_of(const char *struct_name, const char *member_name, 
     if (ptr == NULL)
         return -3;
 
-    size_t i; // for C89 standard or later
-    for (i = 0; i < (sizeof(dynamic_struct_infos) / sizeof(dynamic_struct_infos[0])); i++) {
+    size_t i;
+    for (i = 0; i < ARRAY_SIZE(dynamic_struct_infos); i++) {
         struct DynamicStructInfo *info = dynamic_struct_infos[i];
 
         if (strcmp(struct_name, info->name) == 0) {
-            size_t i1; // for C89 standard or later
-            for (i1 = 0; i1 < info->count; i1++) {
-                if (strcmp(info->members[i1].name, member_name) == 0) {
-                    *out_ptr = (void *)DYNAMIC_CONTAINER_OF(info->members[i1].offset, ptr);
+            size_t j;
+            for (j = 0; j < info->count; j++) {
+                if (strcmp(info->members[j].name, member_name) == 0) {
+                    *out_ptr = (void *)DYNAMIC_CONTAINER_OF(info->members[j].offset, ptr);
 
                     return 0;
                 }

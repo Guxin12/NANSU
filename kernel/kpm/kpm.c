@@ -242,9 +242,7 @@ noinline int sukisu_handle_kpm(unsigned long control_code, unsigned long arg1, u
             goto invalid_arg;
         }
 
-        if (copy_to_user((void __user *)arg2, buf, size)) {
-            res = -EFAULT;
-        }
+        res = copy_to_user((void __user *)arg2, buf, size));
         goto exit;
     }
 
@@ -335,14 +333,12 @@ noinline int sukisu_handle_kpm(unsigned long control_code, unsigned long arg1, u
             goto exit;
         }
 
-        if (copy_to_user((void __user *)arg1, buffer, len + 1)) {
-            res = -EFAULT;
-        }
+        res = copy_to_user((void __user *)arg1, buffer, len + 1));
         goto exit;
     }
 
     default: {
-        res = -ENOSYS;  /* Unknown control code */
+        res = -ENOSYS; /* Unknown control code */
         goto exit;
     }
     }
@@ -373,12 +369,12 @@ int do_kpm(void __user *arg)
         pr_err("kpm: copy_from_user failed\n");
         return -EFAULT;
     }
-    
-   // if (!access_ok(cmd.control_code, sizeof(int))) {
-        // pr_err("kpm: invalid control_code pointer %px\n", (void *)cmd.control_code);
-        // return -EFAULT;
+
+    // if (!access_ok(cmd.control_code, sizeof(int))) {
+    // pr_err("kpm: invalid control_code pointer %px\n", (void *)cmd.control_code);
+    // return -EFAULT;
     // }
-    
+
     if (!access_ok((void __user *)cmd.result_code, sizeof(int))) {
         pr_err("kpm: invalid result_code pointer %px\n", (void *)cmd.result_code);
         return -EFAULT;

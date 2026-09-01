@@ -242,7 +242,7 @@ noinline int sukisu_handle_kpm(unsigned long control_code, unsigned long arg1, u
             goto invalid_arg;
         }
 
-        res = copy_to_user((void __user *)arg2, buf, size));
+        res = copy_to_user((void __user *)arg2, buf, size);
         goto exit;
     }
 
@@ -312,28 +312,15 @@ noinline int sukisu_handle_kpm(unsigned long control_code, unsigned long arg1, u
 
     case SUKISU_KPM_VERSION: {
         char buffer[256] = { 0 };
+
+        sukisu_kpm_version((char *)&buffer, sizeof(buffer));
+
         unsigned int outlen = (unsigned int)arg2;
-
-        if (outlen == 0) {
-            res = -EINVAL;
-            goto exit;
-        }
-
-        if (!access_ok((void __user *)arg1, outlen)) {
-            goto invalid_arg;
-        }
-
-        sukisu_kpm_version(buffer, sizeof(buffer));
-
         int len = strlen(buffer);
-        if (len >= (int)outlen)
+        if (len >= outlen)
             len = outlen - 1;
-        if (len < 0) {
-            res = -EINVAL;
-            goto exit;
-        }
 
-        res = copy_to_user((void __user *)arg1, buffer, len + 1));
+        res = copy_to_user((void __user *)arg1, buffer, len + 1);
         goto exit;
     }
 

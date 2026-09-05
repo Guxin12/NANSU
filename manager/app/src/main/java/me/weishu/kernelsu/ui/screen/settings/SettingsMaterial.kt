@@ -180,7 +180,7 @@ fun SettingPagerMaterial(
                             onClick = actions.onOpenKpm,
                             headlineContent = { Text(kpmTitle) },
                             supportingContent = { Text(stringResource(id = R.string.settings_kpm_summary)) },
-                            leadingContent = { Icon(Icons.Filled.Fence, kpmTitle) },
+                            leadingContent = { Icon(Icons.Filled.Description, kpmTitle) },
                             trailingContent = {
                                 Icon(
                                     Icons.AutoMirrored.Filled.KeyboardArrowRight,

@@ -170,16 +170,18 @@ DYNAMIC_STRUCT_END(task_struct)
 
 #define STRUCT_INFO(name) &(name##_info)
 
-static struct DynamicStructInfo *dynamic_struct_infos[] = { STRUCT_INFO(mount),
-                                                            STRUCT_INFO(vfsmount),
-                                                            STRUCT_INFO(mnt_namespace),
+static struct DynamicStructInfo *dynamic_struct_infos[] = {
+    STRUCT_INFO(mount),
+    STRUCT_INFO(vfsmount),
+    STRUCT_INFO(mnt_namespace),
 #ifdef CONFIG_KPROBES
-                                                            STRUCT_INFO(kprobe),
+    STRUCT_INFO(kprobe),
 #endif
-                                                            STRUCT_INFO(vm_area_struct),
-                                                            STRUCT_INFO(vm_operations_struct),
-                                                            STRUCT_INFO(netlink_kernel_cfg),
-                                                            STRUCT_INFO(task_struct) };
+    STRUCT_INFO(vm_area_struct),
+    STRUCT_INFO(vm_operations_struct),
+    STRUCT_INFO(netlink_kernel_cfg),
+    STRUCT_INFO(task_struct),
+};
 
 /*
  * return 0 if successful

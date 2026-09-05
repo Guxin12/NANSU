@@ -1,15 +1,15 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
-/* 
+/*
  * Copyright (C) 2025 Liankong (xhsw.new@outlook.com). All Rights Reserved.
  * 本代码由GPL-2授权
- * 
+ *
  * 适配KernelSU的KPM 内核模块加载器兼容实现
- * 
+ *
  * 集成了 ELF 解析、内存布局、符号处理、重定位（支持 ARM64 重定位类型）
  * 并参照KernelPatch的标准KPM格式实现加载和控制
  */
 
-/* 
+/*
  * 由 Guxin12 修改完善
  */
 

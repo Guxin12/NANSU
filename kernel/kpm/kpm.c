@@ -333,7 +333,7 @@ noinline int sukisu_handle_kpm(unsigned long control_code, unsigned long arg1, u
             goto exit;
         }
 
-        res = copy_to_user((void __user *)arg1, buffer, len + 1);       
+        res = copy_to_user((void __user *)arg1, buffer, len + 1);
         goto exit;
     }
 

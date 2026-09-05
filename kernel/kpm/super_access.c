@@ -31,7 +31,6 @@
 #include <linux/mm_types.h>
 #include <linux/netlink.h>
 #include <linux/sched.h>
-#include <../fs/mount.h>
 #include "kpm.h"
 #include "compact.h"
 

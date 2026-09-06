@@ -17,6 +17,9 @@ import androidx.compose.material.icons.automirrored.filled.Rule
 import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.ContactPage
+import androidx.compose.material.icons.rounded.Dashboard
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.DeveloperMode
@@ -180,7 +183,7 @@ fun SettingPagerMaterial(
                             onClick = actions.onOpenKpm,
                             headlineContent = { Text(kpmTitle) },
                             supportingContent = { Text(stringResource(id = R.string.settings_kpm_summary)) },
-                            leadingContent = { Icon(Icons.Filled.Description, kpmTitle) },
+                            leadingContent = { Icon(Icons.Rounded.Code, kpmTitle) },
                             trailingContent = {
                                 Icon(
                                     Icons.AutoMirrored.Filled.KeyboardArrowRight,

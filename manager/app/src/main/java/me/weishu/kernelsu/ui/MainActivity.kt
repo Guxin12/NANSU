@@ -227,6 +227,7 @@ class MainActivity : ComponentActivity() {
                                     key.fromShortcut
                                 )
                             }
+                            entry<Route.Kpm>(swipeDismiss = swipeDismiss) { KpmScreen() }
                             entry<Route.Home>(swipeDismiss = swipeDismiss) { mainScreenEntry() }
                             entry<Route.SuperUser>(swipeDismiss = swipeDismiss) { mainScreenEntry() }
                             entry<Route.Module>(swipeDismiss = swipeDismiss) { mainScreenEntry() }

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,7 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.dropUnlessResumed
 import me.weishu.kernelsu.R
+import me.weishu.kernelsu.ui.navigation3.LocalNavigator
 import me.weishu.kernelsu.ui.theme.LocalEnableBlur
 import me.weishu.kernelsu.ui.util.BlurredBar
 import me.weishu.kernelsu.ui.util.rememberBlurBackdrop
@@ -47,6 +50,7 @@ import me.weishu.kernelsu.ui.viewmodel.KpmViewModel
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.basic.*
 import top.yukonga.miuix.kmp.icon.MiuixIcons
+import top.yukonga.miuix.kmp.icon.extended.Back
 import top.yukonga.miuix.kmp.icon.extended.Refresh
 import top.yukonga.miuix.kmp.overlay.OverlayDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -63,6 +67,8 @@ fun KpmMiuix(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     val enableBlur = LocalEnableBlur.current
+    val navigator = LocalNavigator.current
+    val onBack = dropUnlessResumed { navigator.pop() }
 
     val showEmptyState by remember {
         derivedStateOf {
@@ -168,13 +174,27 @@ fun KpmMiuix(
 
     val scrollBehavior = MiuixScrollBehavior()
     val backdrop = rememberBlurBackdrop(enableBlur)
+    val barColor = if (enableBlur) Color.Transparent else colorScheme.surface
 
     Scaffold(
         topBar = {
             BlurredBar(backdrop) {
                 TopAppBar(
-                    color = if (enableBlur) Color.Transparent else colorScheme.surface,
+                    color = barColor,
                     title = stringResource(R.string.kpm_title),
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            val layoutDirection = LocalLayoutDirection.current
+                            Icon(
+                                modifier = Modifier.graphicsLayer {
+                                    if (layoutDirection == LayoutDirection.Rtl) scaleX = -1f
+                                },
+                                imageVector = MiuixIcons.Back,
+                                contentDescription = null,
+                                tint = colorScheme.onBackground
+                            )
+                        }
+                    },
                     actions = {
                         IconButton(
                             onClick = actions.onRefresh

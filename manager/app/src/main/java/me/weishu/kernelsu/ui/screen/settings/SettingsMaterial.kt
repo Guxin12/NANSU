@@ -177,21 +177,25 @@ fun SettingPagerMaterial(
             val kpmTitle = stringResource(id = R.string.kpm_title)
             if (isKpmAvailable) {
                 SegmentedColumn(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 13.dp)
-                    content = listOf {
-                        SegmentedListItem(
-                            onClick = actions.onOpenKpm,
-                            headlineContent = { Text(kpmTitle) },
-                            supportingContent = { Text(stringResource(id = R.string.settings_kpm_summary)) },
-                            leadingContent = { Icon(Icons.Rounded.Code, kpmTitle) },
-                            trailingContent = {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    null
-                                )
-                            }
-                        )
-                    }
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 13.dp),
+                    content = listOf(
+                        {
+                            SegmentedListItem(
+                                onClick = actions.onOpenKpm,
+                                headlineContent = { Text(kpmTitle) },
+                                supportingContent = {
+                                    Text(stringResource(id = R.string.settings_kpm_summary))
+                                },
+                                leadingContent = { Icon(Icons.Rounded.Code, kpmTitle) },
+                                trailingContent = {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                        null
+                                    )
+                                }
+                            )
+                        }
+                    )
                 )
             }
 

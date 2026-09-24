@@ -177,7 +177,7 @@ fun SettingPagerMaterial(
             val kpmTitle = stringResource(id = R.string.kpm_title)
             if (isKpmAvailable) {
                 SegmentedColumn(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 13.dp)
                     content = listOf {
                         SegmentedListItem(
                             onClick = actions.onOpenKpm,

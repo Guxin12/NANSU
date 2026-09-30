@@ -86,6 +86,10 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 import androidx.compose.ui.graphics.BlendMode as ComposeBlendMode
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.VolunteerActivism
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun AboutScreenMiuix(
@@ -436,6 +440,59 @@ private fun AboutContent(
                             )
                         }
                     }
+
+                    // Support development + Learn KernelSU
+                    Spacer(Modifier.height(12.dp))
+
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .then(
+                                if (enableBlur) {
+                                    Modifier.textureBlur(
+                                        backdrop = backdrop,
+                                        shape = RoundedCornerShape(16.dp),
+                                        blurRadius = 60f,
+                                        colors = BlurColors(blendColors = blendColors),
+                                        enabled = true,
+                                    )
+                                } else Modifier
+                            ),
+                        colors = CardDefaults.defaultColors(
+                            if (enableBlur) Color.Transparent else colorScheme.surfaceContainer,
+                            Color.Transparent,
+                        ),
+                    ) {
+                        ArrowPreference(
+                            title = stringResource(R.string.home_support_title),
+                            summary = stringResource(R.string.home_support_content),
+                            startAction = {
+                                Icon(
+                                    imageVector = Icons.Filled.VolunteerActivism,
+                                    contentDescription = stringResource(R.string.home_support_title),
+                                    modifier = Modifier.padding(end = 6.dp),
+                                    tint = colorScheme.onBackground,
+                                )
+                            },
+                            onClick = { actions.onOpenLink("https://patreon.com/weishu") },
+                        )
+                        ArrowPreference(
+                            title = stringResource(R.string.home_learn_kernelsu),
+                            summary = stringResource(R.string.home_click_to_learn_kernelsu),
+                            startAction = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
+                                    contentDescription = stringResource(R.string.home_learn_kernelsu),
+                                    modifier = Modifier.padding(end = 6.dp),
+                                    tint = colorScheme.onBackground,
+                                )
+                            },
+                            onClick = {
+                                actions.onOpenLink(stringResource(R.string.home_learn_kernelsu_url))
+                            },
+                        )
+                    }
+
                     Spacer(
                         Modifier.height(
                             WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +

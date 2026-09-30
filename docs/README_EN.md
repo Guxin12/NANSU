@@ -40,7 +40,7 @@ Currently, the `arm64-v8a` and `x86_64` architectures are supported.
 - Based on KernelPatch, we removed features redundant with KSU and retained only KPM support.
 - Work in Progress: Expanding APatch compatibility by integrating additional functions to ensure compatibility across different implementations.
 
-**Open-source repository**: [https://github.com/Guxin12/SukiSU_KernelPatch](https://github.com/Guxin12/SukiSU_KernelPatch
+**Open-source repository**: [https://github.com/Guxin12/SukiSU_KernelPatch](https://github.com/Guxin12/SukiSU_KernelPatch)
 
 **KPM template**: [https://github.com/udochina/KPM-Build-Anywhere](https://github.com/udochina/KPM-Build-Anywhere)
 

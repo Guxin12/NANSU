@@ -101,7 +101,6 @@ fun AboutScreenMaterial(
                 }
             }
             item {
-                // Original links (GitHub / Telegram / QQ etc.)
                 SegmentedColumn(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     content = state.links.map { linkInfo ->
@@ -113,12 +112,8 @@ fun AboutScreenMaterial(
                         }
                     }
                 )
-
-                // Support development + Learn KernelSU
-                Spacer(Modifier.height(13.dp))
-
+                Spacer(Modifier.height(12.dp))
                 val learnMoreUrl = stringResource(R.string.home_learn_kernelsu_url)
-
                 SegmentedColumn(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) {

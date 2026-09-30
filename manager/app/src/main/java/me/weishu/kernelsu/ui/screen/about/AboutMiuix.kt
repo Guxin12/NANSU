@@ -440,10 +440,7 @@ private fun AboutContent(
                             )
                         }
                     }
-
-                    // Support development + Learn KernelSU
                     Spacer(Modifier.height(12.dp))
-
                     Card(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)

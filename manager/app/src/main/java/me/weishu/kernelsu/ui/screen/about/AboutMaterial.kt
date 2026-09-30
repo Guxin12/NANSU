@@ -39,8 +39,6 @@ import me.weishu.kernelsu.ui.component.material.TopBarBackButton
 import me.weishu.kernelsu.ui.component.material.expressiveTopAppBarColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material3.Icon
 import androidx.compose.ui.res.stringResource
 
@@ -103,6 +101,7 @@ fun AboutScreenMaterial(
                 }
             }
             item {
+                // Original links (GitHub / Telegram / QQ etc.)
                 SegmentedColumn(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     content = state.links.map { linkInfo ->
@@ -115,7 +114,10 @@ fun AboutScreenMaterial(
                     }
                 )
 
+                // Support development + Learn KernelSU
                 Spacer(Modifier.height(13.dp))
+
+                val learnMoreUrl = stringResource(R.string.home_learn_kernelsu_url)
 
                 SegmentedColumn(
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -125,12 +127,6 @@ fun AboutScreenMaterial(
                             onClick = { actions.onOpenLink("https://patreon.com/weishu") },
                             headlineContent = { Text(stringResource(R.string.home_support_title)) },
                             supportingContent = { Text(stringResource(R.string.home_support_content)) },
-                            leadingContent = {
-                                Icon(
-                                    Icons.Filled.VolunteerActivism,
-                                    contentDescription = stringResource(R.string.home_support_title)
-                                )
-                            },
                             trailingContent = {
                                 Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
                             },
@@ -138,17 +134,9 @@ fun AboutScreenMaterial(
                     }
                     item {
                         SegmentedListItem(
-                            onClick = {
-                                actions.onOpenLink(stringResource(R.string.home_learn_kernelsu_url))
-                            },
+                            onClick = { actions.onOpenLink(learnMoreUrl) },
                             headlineContent = { Text(stringResource(R.string.home_learn_kernelsu)) },
                             supportingContent = { Text(stringResource(R.string.home_click_to_learn_kernelsu)) },
-                            leadingContent = {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.MenuBook,
-                                    contentDescription = stringResource(R.string.home_learn_kernelsu)
-                                )
-                            },
                             trailingContent = {
                                 Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
                             },

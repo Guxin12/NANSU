@@ -463,33 +463,16 @@ private fun AboutContent(
                             Color.Transparent,
                         ),
                     ) {
+                        val learnMoreUrl = stringResource(R.string.home_learn_kernelsu_url)
                         ArrowPreference(
                             title = stringResource(R.string.home_support_title),
                             summary = stringResource(R.string.home_support_content),
-                            startAction = {
-                                Icon(
-                                    imageVector = Icons.Filled.VolunteerActivism,
-                                    contentDescription = stringResource(R.string.home_support_title),
-                                    modifier = Modifier.padding(end = 6.dp),
-                                    tint = colorScheme.onBackground,
-                                )
-                            },
                             onClick = { actions.onOpenLink("https://patreon.com/weishu") },
                         )
                         ArrowPreference(
                             title = stringResource(R.string.home_learn_kernelsu),
                             summary = stringResource(R.string.home_click_to_learn_kernelsu),
-                            startAction = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                                    contentDescription = stringResource(R.string.home_learn_kernelsu),
-                                    modifier = Modifier.padding(end = 6.dp),
-                                    tint = colorScheme.onBackground,
-                                )
-                            },
-                            onClick = {
-                                actions.onOpenLink(stringResource(R.string.home_learn_kernelsu_url))
-                            },
+                            onClick = { actions.onOpenLink(learnMoreUrl) },
                         )
                     }
 

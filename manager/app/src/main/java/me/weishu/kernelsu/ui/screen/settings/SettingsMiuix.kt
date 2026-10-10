@@ -245,6 +245,7 @@ fun SettingPagerMiuix(
                             val suSummary = when (uiState.suCompatStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
                                 "managed" -> stringResource(id = R.string.feature_status_managed_summary)
+                                "forced" -> stringResource(id = R.string.feature_status_forced_summary)
                                 else -> stringResource(id = R.string.settings_sucompat_summary)
                             }
                             OverlayDropdownPreference(
@@ -267,6 +268,7 @@ fun SettingPagerMiuix(
                             val umountSummary = when (uiState.kernelUmountStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
                                 "managed" -> stringResource(id = R.string.feature_status_managed_summary)
+                                "forced" -> stringResource(id = R.string.feature_status_forced_summary)
                                 else -> stringResource(id = R.string.settings_kernel_umount_summary)
                             }
                             SwitchPreference(
@@ -288,6 +290,7 @@ fun SettingPagerMiuix(
                             val selinuxHideSummary = when (uiState.selinuxHideStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
                                 "managed" -> stringResource(id = R.string.feature_status_managed_summary)
+                                "forced" -> stringResource(id = R.string.feature_status_forced_summary)
                                 else -> stringResource(id = R.string.settings_selinux_hide_summary)
                             }
                             SwitchPreference(
@@ -309,6 +312,7 @@ fun SettingPagerMiuix(
                             val sulogSummary = when (uiState.sulogStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
                                 "managed" -> stringResource(id = R.string.feature_status_managed_summary)
+                                "forced" -> stringResource(id = R.string.feature_status_forced_summary)
                                 else -> stringResource(id = R.string.settings_sulog_summary)
                             }
                             SwitchPreference(
@@ -330,6 +334,7 @@ fun SettingPagerMiuix(
                             val adbRootSummary = when (uiState.adbRootStatus) {
                                 "unsupported" -> stringResource(id = R.string.feature_status_unsupported_summary)
                                 "managed" -> stringResource(id = R.string.feature_status_managed_summary)
+                                "forced" -> stringResource(id = R.string.feature_status_forced_summary)
                                 else -> stringResource(id = R.string.settings_adb_root_summary)
                             }
                             SwitchPreference(

@@ -25,6 +25,8 @@ mod defs;
 mod feature;
 mod feature_id;
 #[cfg(target_os = "android")]
+mod hot_install;
+#[cfg(target_os = "android")]
 mod init_event;
 #[cfg(all(target_arch = "aarch64", target_os = "android"))]
 mod kpm;

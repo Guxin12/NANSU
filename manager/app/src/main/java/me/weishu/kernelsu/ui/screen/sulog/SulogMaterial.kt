@@ -61,7 +61,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
+import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import me.weishu.kernelsu.R
@@ -437,7 +437,7 @@ private fun SulogDetailDialog(
                 SelectionContainer {
                     Text(
                         text = sulogEntryDetailText(entry),
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = XiaolaiFontFamily,
                     )
                 }
             }

@@ -91,7 +91,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
+import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -885,7 +885,7 @@ private fun ReleaseZipSegmentedItem(
                 Text(text = formatFileSize(release.zipSize))
                 Text(
                     text = "SHA-256: ${shortHash(release.sha256)}",
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = XiaolaiFontFamily,
                     style = MaterialTheme.typography.bodySmall,
                 )
                 if (release.immutable) {

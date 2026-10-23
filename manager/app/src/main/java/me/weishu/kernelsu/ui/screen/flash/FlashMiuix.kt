@@ -33,7 +33,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
+import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -142,7 +142,7 @@ fun FlashScreenMiuix(
                     modifier = Modifier.padding(8.dp),
                     text = state.text,
                     fontSize = 12.sp,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = XiaolaiFontFamily,
                 )
                 Spacer(
                     Modifier.height(

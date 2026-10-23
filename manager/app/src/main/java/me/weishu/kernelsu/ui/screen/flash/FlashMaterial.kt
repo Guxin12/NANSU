@@ -36,7 +36,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import me.weishu.kernelsu.R
 import me.weishu.kernelsu.ui.component.KeyEventBlocker
@@ -128,7 +128,7 @@ fun FlashScreenMaterial(
                 modifier = Modifier.padding(8.dp),
                 text = state.text,
                 style = MaterialTheme.typography.bodySmall,
-                fontFamily = XiaolaiFontFamily,
+                fontFamily = FontFamily.Monospace,
             )
             Spacer(
                 Modifier.height(

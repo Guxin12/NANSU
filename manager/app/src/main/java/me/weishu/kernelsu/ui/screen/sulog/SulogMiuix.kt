@@ -55,7 +55,7 @@ import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
@@ -585,7 +585,7 @@ private fun SulogDetailDialog(
                     Text(
                         text = sulogEntryDetailText(displayEntry),
                         fontSize = 14.sp,
-                        fontFamily = XiaolaiFontFamily,
+                        fontFamily = FontFamily.Monospace,
                     )
                 }
                 Spacer(Modifier.height(12.dp))

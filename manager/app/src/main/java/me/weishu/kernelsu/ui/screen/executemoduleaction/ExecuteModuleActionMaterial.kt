@@ -45,7 +45,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import me.weishu.kernelsu.R
 import me.weishu.kernelsu.ui.component.KeyEventBlocker
@@ -151,7 +151,7 @@ fun ExecuteModuleActionScreenMaterial(
                 modifier = Modifier.padding(8.dp),
                 text = state.text,
                 style = MaterialTheme.typography.bodySmall,
-                fontFamily = XiaolaiFontFamily,
+                fontFamily = FontFamily.Monospace,
             )
             state.resultNotice?.let { ResultNoticeMaterial(it) }
             Spacer(

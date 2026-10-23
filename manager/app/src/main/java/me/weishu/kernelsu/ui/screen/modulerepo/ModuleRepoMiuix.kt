@@ -64,7 +64,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
-import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -989,7 +989,7 @@ private fun ReleaseZipRowMiuix(
             Text(
                 text = "SHA-256: ${shortHash(release.sha256)}",
                 fontSize = 12.sp,
-                fontFamily = XiaolaiFontFamily,
+                fontFamily = FontFamily.Monospace,
                 color = colorScheme.onSurfaceVariantSummary,
             )
             if (release.immutable) {

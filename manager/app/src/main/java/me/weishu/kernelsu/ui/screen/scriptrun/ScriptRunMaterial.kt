@@ -45,7 +45,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import me.weishu.kernelsu.ui.theme.XiaolaiFontFamily
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import me.weishu.kernelsu.R
@@ -284,7 +284,7 @@ private fun SourceSection(prepared: PreparedScript) {
                     SelectionContainer {
                         Text(
                             text = source,
-                            fontFamily = XiaolaiFontFamily,
+                            fontFamily = FontFamily.Monospace,
                             style = MaterialTheme.typography.bodySmall,
                             softWrap = false,
                             modifier = Modifier

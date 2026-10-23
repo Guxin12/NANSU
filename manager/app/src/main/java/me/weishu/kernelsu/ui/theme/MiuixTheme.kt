@@ -68,6 +68,7 @@ fun MiuixKernelSUTheme(
 
     MiuixTheme(
         controller = controller,
+        textStyles = XiaolaiMiuixTextStyles,   // ← 关键行
         content = {
             LaunchedEffect(darkTheme) {
                 val window = (context as? Activity)?.window ?: return@LaunchedEffect

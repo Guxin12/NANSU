@@ -1,5 +1,10 @@
+/*
+ * KPM operations for NANSU.
+ * Kernel path: KSU_IOCTL_KPM → do_kpm() → bridge (KernelPatch).
+ * Do NOT switch to KSU_IOCTL_EXTENSION unless extension glue is also ported.
+ */
 use std::{
-    ffi::{CStr, CString, OsStr},
+    ffi::CString,
     fs, io,
     os::unix::fs::PermissionsExt,
     path::Path,
@@ -12,6 +17,21 @@ use crate::ksucalls::ksuctl;
 
 const KPM_DIR: &str = "/data/adb/kpm";
 
+/// Single entry: fill ksu_kpm_cmd and call KSU_IOCTL_KPM.
+/// Returns the kernel-written `result_code` (0 / length / negative errno).
+fn kpm_io(control_code: u32, arg1: u64, arg2: u64) -> Result<i32> {
+    let mut ret = -1i32;
+    let mut cmd = ksu_uapi::ksu_kpm_cmd {
+        control_code: u64::from(control_code),
+        arg1,
+        arg2,
+        result_code: &raw mut ret as u64,
+    };
+    // ioctl itself may fail (EPERM, ENOTTY, ...); result_code carries KPM op status.
+    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
+    Ok(ret)
+}
+
 pub fn load_module<P>(path: P, args: Option<&str>) -> Result<()>
 where
     P: AsRef<Path>,
@@ -19,18 +39,13 @@ where
     let path = CString::new(path.as_ref().to_string_lossy().to_string())?;
     let args = args.map_or_else(|| CString::new(String::new()), CString::new)?;
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_LOAD),
-        arg1: path.as_ptr() as u64,
-        arg2: args.as_ptr() as u64,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(
+        ksu_uapi::SUKISU_KPM_LOAD,
+        path.as_ptr() as u64,
+        args.as_ptr() as u64,
+    )?;
     if ret < 0 {
-        println!("Failed to load kpm: {}", io::Error::from_raw_os_error(ret));
+        bail!("Failed to load kpm: {}", io::Error::from_raw_os_error(-ret));
     }
     Ok(())
 }
@@ -38,46 +53,31 @@ where
 pub fn list() -> Result<()> {
     let mut buf = vec![0u8; 1024];
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_LIST),
-        arg1: buf.as_mut_ptr() as u64,
-        arg2: buf.len() as u64,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(
+        ksu_uapi::SUKISU_KPM_LIST,
+        buf.as_mut_ptr() as u64,
+        buf.len() as u64,
+    )?;
     if ret < 0 {
         println!(
             "Failed to get kpm list: {}",
-            io::Error::from_raw_os_error(ret)
+            io::Error::from_raw_os_error(-ret)
         );
         return Ok(());
     }
 
     println!("{}", buf2str(&buf));
-
     Ok(())
 }
 
 pub fn unload_module(name: String) -> Result<()> {
     let name = CString::new(name)?;
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_UNLOAD),
-        arg1: name.as_ptr() as u64,
-        arg2: 0,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(ksu_uapi::SUKISU_KPM_UNLOAD, name.as_ptr() as u64, 0)?;
     if ret < 0 {
         println!(
             "Failed to unload kpm: {}",
-            io::Error::from_raw_os_error(ret)
+            io::Error::from_raw_os_error(-ret)
         );
     }
     Ok(())
@@ -87,20 +87,15 @@ pub fn info(name: String) -> Result<()> {
     let name = CString::new(name)?;
     let mut buf = vec![0u8; 256];
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_INFO),
-        arg1: name.as_ptr() as u64,
-        arg2: buf.as_mut_ptr() as u64,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(
+        ksu_uapi::SUKISU_KPM_INFO,
+        name.as_ptr() as u64,
+        buf.as_mut_ptr() as u64,
+    )?;
     if ret < 0 {
         println!(
             "Failed to get kpm info: {}",
-            io::Error::from_raw_os_error(ret)
+            io::Error::from_raw_os_error(-ret)
         );
         return Ok(());
     }
@@ -112,41 +107,26 @@ pub fn control(name: String, args: String) -> Result<i32> {
     let name = CString::new(name)?;
     let args = CString::new(args)?;
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_CONTROL),
-        arg1: name.as_ptr() as u64,
-        arg2: args.as_ptr() as u64,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(
+        ksu_uapi::SUKISU_KPM_CONTROL,
+        name.as_ptr() as u64,
+        args.as_ptr() as u64,
+    )?;
     if ret < 0 {
         println!(
             "Failed to control kpm: {}",
-            io::Error::from_raw_os_error(ret)
+            io::Error::from_raw_os_error(-ret)
         );
     }
-
     Ok(ret)
 }
 
 pub fn num() -> Result<i32> {
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_NUM),
-        arg1: 0,
-        arg2: 0,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(ksu_uapi::SUKISU_KPM_NUM, 0, 0)?;
     if ret < 0 {
         println!(
             "Failed to get kpm num: {}",
-            io::Error::from_raw_os_error(ret)
+            io::Error::from_raw_os_error(-ret)
         );
         return Ok(ret);
     }
@@ -157,57 +137,42 @@ pub fn num() -> Result<i32> {
 pub fn version() -> Result<()> {
     let mut buf = vec![0u8; 1024];
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_VERSION),
-        arg1: buf.as_mut_ptr() as u64,
-        arg2: buf.len() as u64,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(
+        ksu_uapi::SUKISU_KPM_VERSION,
+        buf.as_mut_ptr() as u64,
+        buf.len() as u64,
+    )?;
     if ret < 0 {
         println!(
             "Failed to get kpm version: {}",
-            io::Error::from_raw_os_error(ret)
+            io::Error::from_raw_os_error(-ret)
         );
         return Ok(());
     }
 
-    let binding = buf2str(&buf);
-    let ver = binding.trim();
-
-    print!("{ver}");
+    print!("{}", buf2str(&buf).trim());
     Ok(())
 }
 
 pub fn check_version() -> Result<String> {
     let mut buf = vec![0u8; 1024];
 
-    let mut ret = -1;
-    let mut cmd = ksu_uapi::ksu_kpm_cmd {
-        control_code: u64::from(ksu_uapi::SUKISU_KPM_VERSION),
-        arg1: buf.as_mut_ptr() as u64,
-        arg2: buf.len() as u64,
-        result_code: &raw mut ret as u64,
-    };
-
-    ksuctl(ksu_uapi::KSU_IOCTL_KPM, &raw mut cmd)?;
-
+    let ret = kpm_io(
+        ksu_uapi::SUKISU_KPM_VERSION,
+        buf.as_mut_ptr() as u64,
+        buf.len() as u64,
+    )?;
     if ret < 0 {
-        println!(
-            "Failed to get kpm version: {}",
-            io::Error::from_raw_os_error(ret)
+        bail!(
+            "kpm version failed: {}",
+            io::Error::from_raw_os_error(-ret)
         );
-        return Ok(String::new());
     }
 
-    let binding = buf2str(&buf);
-    let ver = binding.trim();
-
+    let ver = buf2str(&buf);
+    let ver = ver.trim();
     if ver.is_empty() {
-        bail!("KPM: invalid version response: {ver}");
+        bail!("KPM version response is empty");
     }
     log::info!("KPM: version check ok: {ver}");
     Ok(ver.to_string())
@@ -223,11 +188,11 @@ fn ensure_dir() -> Result<()> {
     if dir.metadata()?.permissions().mode() != 0o777 {
         fs::set_permissions(KPM_DIR, fs::Permissions::from_mode(0o777))?;
     }
-
     Ok(())
 }
 
 pub fn booted_load() -> Result<()> {
+    // Bridge / KP missing → fail early, skip loading modules.
     check_version()?;
     ensure_dir()?;
 
@@ -237,38 +202,30 @@ pub fn booted_load() -> Result<()> {
     }
 
     load_all_modules()?;
-
     Ok(())
 }
 
 fn load_all_modules() -> Result<()> {
     let dir = Path::new(KPM_DIR);
-
     if !dir.is_dir() {
         return Ok(());
     }
 
     for entry in dir.read_dir()? {
         let p = entry?.path();
-
         if let Some(ex) = p.extension()
             && ex == OsStr::new("kpm")
         {
-            load_module(p, None)?;
+            load_module(&p, None)?;
         }
     }
     Ok(())
 }
 
-/// Convert zero-padded kernel buffer to owned String.
-/// DON'T REMOVE!!! we must use this method, because kernel use \0 to end of buffer
-/// if directly to_string_lossy, we will get a lot of uninit data
-/// refer: res = copy_to_user(arg1, &buffer, len + 1);
+use std::ffi::OsStr;
+
+/// Kernel buffers are NUL-terminated; scan for first 0.
 fn buf2str(buf: &[u8]) -> String {
-    // SAFETY: buffer is always NUL-terminated by kernel.
-    unsafe {
-        CStr::from_ptr(buf.as_ptr().cast())
-            .to_string_lossy()
-            .into_owned()
-    }
+    let end = buf.iter().position(|&b| b == 0).unwrap_or(buf.len());
+    String::from_utf8_lossy(&buf[..end]).into_owned()
 }

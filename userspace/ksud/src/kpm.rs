@@ -3,12 +3,7 @@
  * Kernel path: KSU_IOCTL_KPM → do_kpm() → bridge (KernelPatch).
  * Do NOT switch to KSU_IOCTL_EXTENSION unless extension glue is also ported.
  */
-use std::{
-    ffi::CString,
-    fs, io,
-    os::unix::fs::PermissionsExt,
-    path::Path,
-};
+use std::{ffi::CString, fs, io, os::unix::fs::PermissionsExt, path::Path};
 
 use anyhow::{Result, bail};
 
@@ -163,10 +158,7 @@ pub fn check_version() -> Result<String> {
         buf.len() as u64,
     )?;
     if ret < 0 {
-        bail!(
-            "kpm version failed: {}",
-            io::Error::from_raw_os_error(-ret)
-        );
+        bail!("kpm version failed: {}", io::Error::from_raw_os_error(-ret));
     }
 
     let ver = buf2str(&buf);

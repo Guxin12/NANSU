@@ -21,5 +21,5 @@
 #define SUKISU_KPM_OUTPUT_MAX 4096
 
 long sukisu_kpm_bridge(unsigned long op, unsigned long a1, unsigned long a2,
-                       unsigned long a3, unsigned long a4);
+		       unsigned long a3, unsigned long a4);
 #endif

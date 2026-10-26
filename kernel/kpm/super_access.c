@@ -82,7 +82,9 @@ DYNAMIC_STRUCT_END(vfsmount)
 DYNAMIC_STRUCT_BEGIN(mnt_namespace)
 DEFINE_MEMBER(mnt_namespace, ns)
 DEFINE_MEMBER(mnt_namespace, root)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 18, 0)
 DEFINE_MEMBER(mnt_namespace, seq)
+#endif
 DEFINE_MEMBER(mnt_namespace, mounts)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0)
 DEFINE_MEMBER(mnt_namespace, count)
@@ -128,12 +130,12 @@ DYNAMIC_STRUCT_BEGIN(netlink_kernel_cfg)
 DEFINE_MEMBER(netlink_kernel_cfg, groups)
 DEFINE_MEMBER(netlink_kernel_cfg, flags)
 DEFINE_MEMBER(netlink_kernel_cfg, input)
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0)
+#ifdef KSU_NETLINK_CFG_HAS_CB_MUTEX
 DEFINE_MEMBER(netlink_kernel_cfg, cb_mutex)
 #endif
 DEFINE_MEMBER(netlink_kernel_cfg, bind)
 DEFINE_MEMBER(netlink_kernel_cfg, unbind)
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 0)
+#ifdef KSU_NETLINK_CFG_HAS_COMPARE
 DEFINE_MEMBER(netlink_kernel_cfg, compare)
 #endif
 DYNAMIC_STRUCT_END(netlink_kernel_cfg)

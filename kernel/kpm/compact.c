@@ -20,6 +20,7 @@
 #include <asm/cacheflush.h>
 #include <linux/set_memory.h>
 
+#include "infra/symbol_resolver.h"
 #include "kpm.h"
 #include "compact.h"
 #include "policy/allowlist.h"
@@ -85,7 +86,7 @@ unsigned long sukisu_compact_find_symbol(const char *name)
             return (unsigned long)symbol->addr;
     }
 
-    addr = kallsyms_lookup_name(name);
+    addr = find_kernel_symbol_exact(name);
     if (addr)
         return addr;
 

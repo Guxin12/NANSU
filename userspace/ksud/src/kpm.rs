@@ -11,7 +11,7 @@ use std::{
     path::Path,
 };
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 
 use crate::ksu_uapi;
 use crate::ksucalls::ksuctl;

@@ -69,6 +69,18 @@ import me.weishu.kernelsu.ui.component.material.TonalCard
 import me.weishu.kernelsu.ui.component.material.expressiveTopAppBarColors
 import me.weishu.kernelsu.ui.component.rebootlistpopup.RebootListPopup
 import me.weishu.kernelsu.ui.component.statustag.StatusTag
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.rounded.CheckCircleOutline
+import androidx.compose.material.icons.rounded.ErrorOutline
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomePagerMaterial(
@@ -189,131 +201,190 @@ private fun StatusCard(
     state: HomeUiState,
     actions: HomeActions,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(13.dp)) {
-        val ksuActive = state.ksuVersion != null
-        val notInstalled = !ksuActive && state.kernelVersion.isGKI()
+    val onClick = {
+        if (!state.isLateLoadMode) {
+            actions.onInstallClick()
+        }
+    }
 
-        val containerColor = if (ksuActive) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            MaterialTheme.colorScheme.errorContainer
+    when {
+        state.ksuVersion != null -> {
+            ActiveStatusCard(state = state, onClick = onClick)
         }
-        val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor)
+        state.kernelVersion.isGKI() -> {
+            InactiveStatusCard(
+                state = state,
+                actions = actions,
+                notInstalled = true,
+                onClick = onClick,
+            )
+        }
+        else -> {
+            InactiveStatusCard(
+                state = state,
+                actions = actions,
+                notInstalled = false,
+                onClick = onClick,
+            )
+        }
+    }
+}
 
-        val statusIcon = when {
-            ksuActive -> Icons.Rounded.CheckCircle
-            notInstalled -> Icons.Rounded.Warning
-            else -> Icons.Rounded.Block
-        }
-        val statusTitle = when {
-            ksuActive -> stringResource(R.string.home_working)
-            notInstalled -> stringResource(R.string.home_not_installed)
-            else -> stringResource(R.string.home_unsupported)
-        }
-        val statusSummary = when {
-            ksuActive -> stringResource(R.string.home_working_version, "${state.ksuVersion}-${state.kernelUAPIVersion}")
-            notInstalled -> stringResource(R.string.home_click_to_install)
-            else -> stringResource(R.string.home_unsupported_reason)
-        }
-        val workingMode = if (ksuActive) {
-            when (state.lkmMode) {
-                null -> ""
-                true -> "LKM"
-                else -> "Built-in"
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ActiveStatusCard(
+    state: HomeUiState,
+    onClick: () -> Unit,
+) {
+    val containerColor = MaterialTheme.colorScheme.secondaryContainer
+    val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor)
+    val accentColor = MaterialTheme.colorScheme.primary
+
+    val workingMode = when (state.lkmMode) {
+        null -> null
+        true -> "LKM"
+        else -> "Built-in"
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = containerColor,
+        contentColor = contentColor,
+        shape = MaterialTheme.shapes.large,
+        onClick = onClick,
+    ) {
+        Box {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 20.dp, y = 24.dp)
+                    .size(140.dp),
+                imageVector = Icons.Rounded.CheckCircleOutline,
+                tint = accentColor.copy(alpha = 0.25f),
+                contentDescription = null
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 188.dp)
+                    .padding(22.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    if (workingMode != null) {
+                        StatusTag(
+                            label = workingMode,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            backgroundColor = accentColor,
+                        )
+                    }
+                    if (state.showCustomLkmBadge) {
+                        StatusTag(
+                            label = stringResource(R.string.home_lkm_custom),
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        )
+                    }
+                    if (state.isSafeMode) {
+                        StatusTag(
+                            label = stringResource(R.string.safe_mode),
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            backgroundColor = MaterialTheme.colorScheme.errorContainer,
+                        )
+                    }
+                    if (state.isLateLoadMode) {
+                        StatusTag(
+                            label = stringResource(R.string.jailbreak_mode),
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            backgroundColor = MaterialTheme.colorScheme.errorContainer,
+                        )
+                    }
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = stringResource(R.string.home_working),
+                        style = MaterialTheme.typography.displaySmall,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.home_working_version,
+                            "${state.ksuVersion}-${state.kernelUAPIVersion}"
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = FontFamily.Monospace,
+                        color = contentColor.copy(alpha = 0.75f),
+                    )
+                }
             }
-        } else ""
+        }
+    }
+}
 
-        val statusTrailing: (@Composable () -> Unit)? = if (ksuActive && workingMode.isNotEmpty()) {
-            {
-                StatusTag(
-                    label = workingMode,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    backgroundColor = MaterialTheme.colorScheme.primary
+@Composable
+private fun InactiveStatusCard(
+    state: HomeUiState,
+    actions: HomeActions,
+    notInstalled: Boolean,
+    onClick: () -> Unit,
+) {
+    val containerColor = MaterialTheme.colorScheme.errorContainer
+    val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor)
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = containerColor,
+        contentColor = contentColor,
+        shape = MaterialTheme.shapes.large,
+        onClick = onClick,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 188.dp)
+                .padding(22.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.ErrorOutline,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(18.dp),
+                )
+                Text(
+                    text = if (notInstalled) {
+                        stringResource(R.string.home_click_to_install)
+                    } else {
+                        stringResource(R.string.home_unsupported_reason)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
-        } else if (notInstalled && state.isSELinuxPermissive) {
-            {
-                Button(
-                    onClick = actions.onJailbreakClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError
-                    )
-                ) {
-                    Text(stringResource(R.string.home_jailbreak))
-                }
-            }
-        } else null
 
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = containerColor,
-            contentColor = contentColor,
-            shape = MaterialTheme.shapes.large,
-            onClick = {
-                if (!state.isLateLoadMode) {
-                    actions.onInstallClick()
+            Text(
+                text = stringResource(
+                    if (notInstalled) R.string.home_not_installed
+                    else R.string.home_unsupported
+                ),
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Bold,
+            )
+
+            if (notInstalled) {
+                Button(onClick = actions.onInstallClick) {
+                    Text(stringResource(R.string.install))
                 }
             }
-        ) {
-            ListItem(
-                modifier = Modifier,
-                leadingContent = {
-                    Icon(statusIcon, contentDescription = statusTitle)
-                },
-                trailingContent = statusTrailing,
-                overlineContent = null,
-                supportingContent = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = statusSummary,
-                            modifier = Modifier.weight(1f, fill = false),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        if (state.showCustomLkmBadge) {
-                            Spacer(Modifier.width(8.dp))
-                            StatusTag(
-                                label = stringResource(R.string.home_lkm_custom),
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            )
-                        }
-                    }
-                },
-                verticalAlignment = Alignment.CenterVertically,
-                colors = ListItemDefaults.colors(
-                    containerColor = Color.Transparent,
-                    contentColor = contentColor,
-                    leadingContentColor = contentColor,
-                    trailingContentColor = contentColor,
-                    supportingContentColor = contentColor.copy(alpha = 0.7f)
-                ),
-                elevation = ListItemDefaults.elevation(),
-                content = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = statusTitle,
-                            style = MaterialTheme.typography.titleMediumEmphasized
-                        )
-                        if (ksuActive && state.isSafeMode) {
-                            Spacer(Modifier.width(8.dp))
-                            StatusTag(
-                                label = stringResource(id = R.string.safe_mode),
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                                backgroundColor = MaterialTheme.colorScheme.errorContainer
-                            )
-                        }
-                        if (ksuActive && state.isLateLoadMode) {
-                            Spacer(Modifier.width(8.dp))
-                            StatusTag(
-                                label = stringResource(id = R.string.jailbreak_mode),
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                                backgroundColor = MaterialTheme.colorScheme.errorContainer
-                            )
-                        }
-                    }
-                },
-            )
         }
     }
 }

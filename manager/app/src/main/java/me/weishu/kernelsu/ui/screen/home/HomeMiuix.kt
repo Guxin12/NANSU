@@ -85,6 +85,10 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme.isDynamicColor
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.ui.text.font.FontFamily
 
 @Composable
 fun HomePagerMiuix(
@@ -236,189 +240,202 @@ private fun StatusCard(
     state: HomeUiState,
     actions: HomeActions,
 ) {
-    Column {
-        when {
-            state.ksuVersion != null -> {
-                val workingState = buildString {
+    val onClick = {
+        if (!state.isLateLoadMode) {
+            actions.onInstallClick()
+        }
+    }
+
+    when {
+        state.ksuVersion != null -> {
+            ActiveStatusCard(state = state, onClick = onClick)
+        }
+        state.kernelVersion.isGKI() -> {
+            InactiveStatusCard(
+                state = state,
+                actions = actions,
+                notInstalled = true,
+                onClick = onClick,
+            )
+        }
+        else -> {
+            InactiveStatusCard(
+                state = state,
+                actions = actions,
+                notInstalled = false,
+                onClick = onClick,
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ActiveStatusCard(
+    state: HomeUiState,
+    onClick: () -> Unit,
+) {
+    val isDark = isInDarkTheme()
+    val accentColor = if (isDynamicColor) colorScheme.primary else Color(0xFF36D167)
+    val tagBackground = when {
+        isDynamicColor -> colorScheme.tertiaryContainer
+        isDark -> Color(0xFF315D3E)
+        else -> Color(0xFFB8E8C5)
+    }
+    val tagContent = when {
+        isDynamicColor -> colorScheme.onTertiaryContainer
+        isDark -> Color(0xFFB8E8C5)
+        else -> Color(0xFF164A29)
+    }
+    val workingMode = when (state.lkmMode) {
+        null -> null
+        true -> "<LKM>"
+        else -> "<Built-in>"
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.defaultColors(
+            color = when {
+                isDynamicColor -> colorScheme.secondaryContainer
+                isDark -> Color(0xFF1A3825)
+                else -> Color(0xFFDFFAE4)
+            }
+        ),
+        onClick = onClick,
+        showIndication = !state.isLateLoadMode,
+        pressFeedbackType = PressFeedbackType.Tilt
+    ) {
+        Box {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .offset(27.dp, 31.dp)
+                    .size(150.dp),
+                imageVector = Icons.Rounded.CheckCircleOutline,
+                tint = accentColor.copy(alpha = if (isDynamicColor) 0.8f else 1f),
+                contentDescription = null
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 188.dp)
+                    .padding(22.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    if (workingMode != null) {
+                        StatusTag(
+                            label = workingMode,
+                            contentColor = if (isDynamicColor) colorScheme.onPrimary else Color.White,
+                            backgroundColor = accentColor,
+                        )
+                    }
+                    if (state.showCustomLkmBadge) {
+                        StatusTag(
+                            label = stringResource(R.string.home_lkm_custom),
+                            contentColor = tagContent,
+                            backgroundColor = tagBackground,
+                        )
+                    }
                     if (state.isSafeMode) {
-                        append(" [${stringResource(id = R.string.safe_mode)}]")
+                        StatusTag(
+                            label = stringResource(R.string.safe_mode),
+                            contentColor = colorScheme.onErrorContainer,
+                            backgroundColor = colorScheme.errorContainer,
+                        )
                     }
                     if (state.isLateLoadMode) {
-                        append(" [${stringResource(id = R.string.jailbreak_mode)}]")
-                    }
-                }
-                val workingMode = when (state.lkmMode) {
-                    null -> null
-                    true -> "<LKM>"
-                    else -> "<Built-in>"
-                }
-                val workingText = "${stringResource(id = R.string.home_working)}$workingState"
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.defaultColors(
-                            color = when {
-                                isDynamicColor -> colorScheme.secondaryContainer
-                                isInDarkTheme() -> Color(0xFF1A3825)
-                                else -> Color(0xFFDFFAE4)
-                            }
-                        ),
-                        onClick = {
-                            if (!state.isLateLoadMode) {
-                                actions.onInstallClick()
-                            }
-                        },
-                        showIndication = !state.isLateLoadMode,
-                        pressFeedbackType = PressFeedbackType.Tilt
-                    ) {
-                        Box {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .offset(27.dp, 31.dp),
-                                contentAlignment = Alignment.BottomEnd
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(110.dp),
-                                    imageVector = Icons.Rounded.CheckCircleOutline,
-                                    tint = if (isDynamicColor) {
-                                        colorScheme.primary.copy(alpha = 0.8f)
-                                    } else {
-                                        Color(0xFF36D167)
-                                    },
-                                    contentDescription = null
-                                )
-                            }
-                            if (workingMode != null) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(16.dp, 10.dp),
-                                    contentAlignment = Alignment.BottomStart,
-                                ) {
-                                    Text(
-                                        text = workingMode,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Medium,
-                                    )
-                                }
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(16.dp, 14.dp),
-                                contentAlignment = Alignment.TopStart,
-                            ) {
-                                Column {
-                                    Text(
-                                        text = workingText,
-                                        fontSize = 22.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                    )
-                                    Spacer(Modifier.height(1.dp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(
-                                            text = stringResource(
-                                                R.string.home_working_version,
-                                                "${state.ksuVersion}-${state.kernelUAPIVersion}"
-                                            ),
-                                            modifier = Modifier.weight(1f, fill = false),
-                                            fontSize = 15.sp,
-                                        )
-                                        if (state.showCustomLkmBadge) {
-                                            Spacer(Modifier.width(8.dp))
-                                            StatusTag(
-                                                label = stringResource(R.string.home_lkm_custom),
-                                                contentColor = if (isDynamicColor) {
-                                                    colorScheme.onTertiaryContainer
-                                                } else if (isInDarkTheme()) {
-                                                    Color(0xFFB8E8C5)
-                                                } else {
-                                                    Color(0xFF164A29)
-                                                },
-                                                backgroundColor = if (isDynamicColor) {
-                                                    colorScheme.tertiaryContainer
-                                                } else if (isInDarkTheme()) {
-                                                    Color(0xFF315D3E)
-                                                } else {
-                                                    Color(0xFFB8E8C5)
-                                                },
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            state.kernelVersion.isGKI() -> {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Card(
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            if (!state.isLateLoadMode) {
-                                actions.onInstallClick()
-                            }
-                        },
-                        showIndication = !state.isLateLoadMode,
-                        pressFeedbackType = PressFeedbackType.Tilt
-                    ) {
-                        BasicComponent(
-                            title = stringResource(R.string.home_not_installed),
-                            summary = stringResource(R.string.home_click_to_install),
-                            startAction = {
-                                Icon(
-                                    Icons.Rounded.ErrorOutline,
-                                    stringResource(R.string.home_not_installed),
-                                    modifier = Modifier.padding(end = 6.dp),
-                                    tint = colorScheme.onBackground,
-                                )
-                            },
-                            endActions = {
-                                if (state.isSELinuxPermissive) {
-                                    TextButton(
-                                        text = stringResource(R.string.home_jailbreak),
-                                        onClick = actions.onJailbreakClick,
-                                        colors = ButtonDefaults.textButtonColorsPrimary()
-                                    )
-                                }
-                            }
+                        StatusTag(
+                            label = stringResource(R.string.jailbreak_mode),
+                            contentColor = colorScheme.onErrorContainer,
+                            backgroundColor = colorScheme.errorContainer,
                         )
                     }
                 }
-            }
 
-            else -> {
-                Card(
-                    onClick = {
-                        if (!state.isLateLoadMode) {
-                            actions.onInstallClick()
-                        }
-                    },
-                    showIndication = !state.isLateLoadMode,
-                    pressFeedbackType = PressFeedbackType.Tilt
-                ) {
-                    BasicComponent(
-                        title = stringResource(R.string.home_unsupported),
-                        summary = stringResource(R.string.home_unsupported_reason),
-                        startAction = {
-                            Icon(
-                                Icons.Rounded.ErrorOutline,
-                                stringResource(R.string.home_unsupported),
-                                modifier = Modifier.padding(end = 16.dp),
-                                tint = colorScheme.onBackground,
-                            )
-                        }
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = stringResource(R.string.home_working),
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.home_working_version,
+                            "${state.ksuVersion}-${state.kernelUAPIVersion}"
+                        ),
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily.Monospace,
+                        color = colorScheme.onSurfaceVariantSummary,
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun InactiveStatusCard(
+    state: HomeUiState,
+    actions: HomeActions,
+    notInstalled: Boolean,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onClick,
+        showIndication = !state.isLateLoadMode,
+        pressFeedbackType = PressFeedbackType.Tilt
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 188.dp)
+                .padding(22.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.ErrorOutline,
+                    contentDescription = null,
+                    tint = colorScheme.error,
+                    modifier = Modifier.size(18.dp),
+                )
+                Text(
+                    text = if (notInstalled) {
+                        stringResource(R.string.home_click_to_install)
+                    } else {
+                        stringResource(R.string.home_unsupported_reason)
+                    },
+                    fontSize = 14.sp,
+                    color = colorScheme.error,
+                )
+            }
+
+            Text(
+                text = stringResource(
+                    if (notInstalled) R.string.home_not_installed
+                    else R.string.home_unsupported
+                ),
+                modifier = Modifier.padding(vertical = 12.dp),
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+            )
+
+            if (notInstalled) {
+                TextButton(
+                    text = stringResource(R.string.install),
+                    onClick = actions.onInstallClick,
+                    colors = ButtonDefaults.textButtonColorsPrimary()
+                )
             }
         }
     }

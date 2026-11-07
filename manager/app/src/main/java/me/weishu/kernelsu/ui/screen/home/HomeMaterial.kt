@@ -73,7 +73,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -84,27 +83,12 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-
-private fun Modifier.dashedBorder(
-    color: Color,
-    cornerRadius: Dp = 16.dp,
-    strokeWidth: Dp = 1.5.dp,
-    dashLength: Dp = 6.dp,
-    gapLength: Dp = 4.dp,
-): Modifier = this.drawBehind {
-    val stroke = Stroke(
-        width = strokeWidth.toPx(),
-        pathEffect = PathEffect.dashPathEffect(
-            floatArrayOf(dashLength.toPx(), gapLength.toPx()),
-            0f
-        )
-    )
-    drawRoundRect(
-        color = color,
-        style = stroke,
-        cornerRadius = CornerRadius(cornerRadius.toPx())
-    )
-}
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.text.font.FontFamily
 
 @Composable
 fun HomePagerMaterial(
@@ -230,24 +214,15 @@ private fun StatusCard(
             actions.onInstallClick()
         }
     }
-
     when {
         state.ksuVersion != null -> {
             ActiveStatusCard(state = state, onClick = onClick)
-        }
-        state.kernelVersion.isGKI() -> {
-            InactiveStatusCard(
-                state = state,
-                actions = actions,
-                notInstalled = true,
-                onClick = onClick,
-            )
         }
         else -> {
             InactiveStatusCard(
                 state = state,
                 actions = actions,
-                notInstalled = false,
+                notInstalled = state.kernelVersion.isGKI(),
                 onClick = onClick,
             )
         }
@@ -262,71 +237,49 @@ private fun ActiveStatusCard(
 ) {
     val containerColor = MaterialTheme.colorScheme.primary
     val contentColor = MaterialTheme.colorScheme.onPrimary
-
     val workingMode = when (state.lkmMode) {
-        null -> null
+        null -> ""
         true -> "LKM"
         else -> "Built-in"
     }
 
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.large),
         color = containerColor,
         contentColor = contentColor,
         shape = MaterialTheme.shapes.large,
         onClick = onClick,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 168.dp)
-        ) {
-            // 右侧装饰同心圆
-            Canvas(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .offset(x = 36.dp)
-                    .size(180.dp)
-            ) {
-                val stroke = 1.5.dp.toPx()
-                drawCircle(
-                    color = contentColor.copy(alpha = 0.12f),
-                    radius = size.minDimension / 2,
-                    style = Stroke(width = stroke)
-                )
-                drawCircle(
-                    color = contentColor.copy(alpha = 0.18f),
-                    radius = size.minDimension / 2 * 0.68f,
-                    style = Stroke(width = stroke)
-                )
-                drawCircle(
-                    color = contentColor.copy(alpha = 0.28f),
-                    radius = size.minDimension / 2 * 0.36f,
-                )
+        BoxWithConstraints(
+            modifier = Modifier.drawBehind {
+                drawStatusRings(contentColor.copy(alpha = 0.18f))
             }
-
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .heightIn(min = 188.dp)
                     .padding(22.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    if (workingMode != null) {
+                    if (workingMode.isNotEmpty()) {
                         StatusTag(
                             label = workingMode,
                             contentColor = containerColor,
-                            backgroundColor = contentColor.copy(alpha = 0.92f),
+                            backgroundColor = contentColor,
                         )
                     }
                     if (state.showCustomLkmBadge) {
                         StatusTag(
                             label = stringResource(R.string.home_lkm_custom),
-                            contentColor = contentColor,
-                            backgroundColor = contentColor.copy(alpha = 0.2f),
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
                         )
                     }
                     if (state.isSafeMode) {
@@ -344,15 +297,11 @@ private fun ActiveStatusCard(
                         )
                     }
                 }
-
-                Spacer(Modifier.height(12.dp))
-
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = stringResource(R.string.home_working),
                         style = MaterialTheme.typography.displaySmall,
-                        fontWeight = FontWeight.Bold,
-                        color = contentColor,
+                        fontWeight = FontWeight.Black,
                     )
                     Text(
                         text = stringResource(
@@ -360,7 +309,7 @@ private fun ActiveStatusCard(
                             "${state.ksuVersion}-${state.kernelUAPIVersion}"
                         ),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = contentColor.copy(alpha = 0.85f),
+                        fontFamily = FontFamily.Monospace,
                     )
                 }
             }
@@ -375,33 +324,31 @@ private fun InactiveStatusCard(
     notInstalled: Boolean,
     onClick: () -> Unit,
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outline
+    val accentColor = MaterialTheme.colorScheme.error
+
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .dashedBorder(
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.55f),
-                cornerRadius = 16.dp
-            ),
-        color = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surfaceBright,
         shape = MaterialTheme.shapes.large,
         onClick = onClick,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 168.dp)
+                .drawBehind { drawDashedBorder(outlineColor) }
+                .heightIn(min = 188.dp)
                 .padding(22.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.ErrorOutline,
+                    imageVector = if (notInstalled) Icons.Rounded.Warning else Icons.Rounded.Block,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = accentColor,
                     modifier = Modifier.size(18.dp),
                 )
                 Text(
@@ -411,21 +358,19 @@ private fun InactiveStatusCard(
                         stringResource(R.string.home_unsupported_reason)
                     },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
+                    color = accentColor,
                 )
             }
-
             Text(
                 text = stringResource(
                     if (notInstalled) R.string.home_not_installed
                     else R.string.home_unsupported
                 ),
                 style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Black,
             )
-
             if (notInstalled) {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = actions.onInstallClick) {
                         Text(stringResource(R.string.install))
                     }
@@ -438,6 +383,38 @@ private fun InactiveStatusCard(
             }
         }
     }
+}
+
+private fun DrawScope.drawStatusRings(color: Color) {
+    val center = Offset(size.width - 36.dp.toPx(), 32.dp.toPx())
+    val stroke = 2.dp.toPx()
+    drawCircle(color = color, radius = 112.dp.toPx(), center = center, style = Stroke(stroke))
+    drawCircle(
+        color = color,
+        radius = 84.dp.toPx(),
+        center = center,
+        style = Stroke(
+            stroke,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 8.dp.toPx()))
+        ),
+    )
+    drawCircle(color = color, radius = 56.dp.toPx(), center = center, style = Stroke(stroke))
+    drawCircle(color = color, radius = 18.dp.toPx(), center = center)
+}
+
+private fun DrawScope.drawDashedBorder(color: Color) {
+    val stroke = 2.dp.toPx()
+    val radius = 28.dp.toPx() - stroke / 2
+    drawRoundRect(
+        color = color,
+        topLeft = Offset(stroke / 2, stroke / 2),
+        size = size.copy(width = size.width - stroke, height = size.height - stroke),
+        cornerRadius = CornerRadius(radius, radius),
+        style = Stroke(
+            stroke,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(8.dp.toPx(), 6.dp.toPx()))
+        ),
+    )
 }
 
 @Composable

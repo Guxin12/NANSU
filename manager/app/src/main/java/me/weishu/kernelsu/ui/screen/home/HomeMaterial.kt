@@ -336,7 +336,7 @@ private fun InactiveStatusCard(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surfaceBright,
-        shape = MaterialTheme.shapes.large,
+        shape = RoundedCornerShape(28.dp),
         onClick = onClick,
     ) {
         Column(

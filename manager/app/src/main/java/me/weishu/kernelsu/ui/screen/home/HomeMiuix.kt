@@ -431,11 +431,19 @@ private fun InactiveStatusCard(
             )
 
             if (notInstalled) {
-                TextButton(
-                    text = stringResource(R.string.install),
-                    onClick = actions.onInstallClick,
-                    colors = ButtonDefaults.textButtonColorsPrimary()
-                )
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    TextButton(
+                        text = stringResource(R.string.install),
+                        onClick = actions.onInstallClick,
+                        colors = ButtonDefaults.textButtonColorsPrimary()
+                    )
+                    if (state.isSELinuxPermissive) {
+                        TextButton(
+                            text = stringResource(R.string.home_jailbreak),
+                            onClick = actions.onJailbreakClick,
+                        )
+                    }
+                }
             }
         }
     }

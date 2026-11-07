@@ -69,18 +69,44 @@ import me.weishu.kernelsu.ui.component.material.TonalCard
 import me.weishu.kernelsu.ui.component.material.expressiveTopAppBarColors
 import me.weishu.kernelsu.ui.component.rebootlistpopup.RebootListPopup
 import me.weishu.kernelsu.ui.component.statustag.StatusTag
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.rounded.CheckCircleOutline
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
+private fun Modifier.dashedBorder(
+    color: Color,
+    cornerRadius: Dp = 16.dp,
+    strokeWidth: Dp = 1.5.dp,
+    dashLength: Dp = 6.dp,
+    gapLength: Dp = 4.dp,
+): Modifier = this.drawBehind {
+    val stroke = Stroke(
+        width = strokeWidth.toPx(),
+        pathEffect = PathEffect.dashPathEffect(
+            floatArrayOf(dashLength.toPx(), gapLength.toPx()),
+            0f
+        )
+    )
+    drawRoundRect(
+        color = color,
+        style = stroke,
+        cornerRadius = CornerRadius(cornerRadius.toPx())
+    )
+}
 
 @Composable
 fun HomePagerMaterial(
@@ -236,9 +262,8 @@ private fun ActiveStatusCard(
     state: HomeUiState,
     onClick: () -> Unit,
 ) {
-    val containerColor = MaterialTheme.colorScheme.secondaryContainer
-    val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor)
-    val accentColor = MaterialTheme.colorScheme.primary
+    val containerColor = MaterialTheme.colorScheme.primary
+    val contentColor = MaterialTheme.colorScheme.onPrimary
 
     val workingMode = when (state.lkmMode) {
         null -> null
@@ -253,21 +278,38 @@ private fun ActiveStatusCard(
         shape = MaterialTheme.shapes.large,
         onClick = onClick,
     ) {
-        Box {
-            Icon(
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 168.dp)
+        ) {
+            // 右侧装饰同心圆
+            Canvas(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(x = 20.dp, y = 24.dp)
-                    .size(140.dp),
-                imageVector = Icons.Rounded.CheckCircleOutline,
-                tint = accentColor.copy(alpha = 0.25f),
-                contentDescription = null
-            )
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 36.dp)
+                    .size(180.dp)
+            ) {
+                val stroke = 1.5.dp.toPx()
+                drawCircle(
+                    color = contentColor.copy(alpha = 0.12f),
+                    radius = size.minDimension / 2,
+                    style = Stroke(width = stroke)
+                )
+                drawCircle(
+                    color = contentColor.copy(alpha = 0.18f),
+                    radius = size.minDimension / 2 * 0.68f,
+                    style = Stroke(width = stroke)
+                )
+                drawCircle(
+                    color = contentColor.copy(alpha = 0.28f),
+                    radius = size.minDimension / 2 * 0.36f,
+                )
+            }
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 188.dp)
                     .padding(22.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
@@ -278,15 +320,15 @@ private fun ActiveStatusCard(
                     if (workingMode != null) {
                         StatusTag(
                             label = workingMode,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            backgroundColor = accentColor,
+                            contentColor = containerColor,
+                            backgroundColor = contentColor.copy(alpha = 0.92f),
                         )
                     }
                     if (state.showCustomLkmBadge) {
                         StatusTag(
                             label = stringResource(R.string.home_lkm_custom),
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = contentColor,
+                            backgroundColor = contentColor.copy(alpha = 0.2f),
                         )
                     }
                     if (state.isSafeMode) {
@@ -305,11 +347,14 @@ private fun ActiveStatusCard(
                     }
                 }
 
+                Spacer(Modifier.height(12.dp))
+
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = stringResource(R.string.home_working),
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold,
+                        color = contentColor,
                     )
                     Text(
                         text = stringResource(
@@ -317,8 +362,7 @@ private fun ActiveStatusCard(
                             "${state.ksuVersion}-${state.kernelUAPIVersion}"
                         ),
                         style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = FontFamily.Monospace,
-                        color = contentColor.copy(alpha = 0.75f),
+                        color = contentColor.copy(alpha = 0.85f),
                     )
                 }
             }
@@ -333,20 +377,22 @@ private fun InactiveStatusCard(
     notInstalled: Boolean,
     onClick: () -> Unit,
 ) {
-    val containerColor = MaterialTheme.colorScheme.errorContainer
-    val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor)
-
     Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = containerColor,
-        contentColor = contentColor,
+        modifier = Modifier
+            .fillMaxWidth()
+            .dashedBorder(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.55f),
+                cornerRadius = 16.dp
+            ),
+        color = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
         shape = MaterialTheme.shapes.large,
         onClick = onClick,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 188.dp)
+                .heightIn(min = 168.dp)
                 .padding(22.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -381,8 +427,15 @@ private fun InactiveStatusCard(
             )
 
             if (notInstalled) {
-                Button(onClick = actions.onInstallClick) {
-                    Text(stringResource(R.string.install))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Button(onClick = actions.onInstallClick) {
+                        Text(stringResource(R.string.install))
+                    }
+                    if (state.isSELinuxPermissive) {
+                        OutlinedButton(onClick = actions.onJailbreakClick) {
+                            Text(stringResource(R.string.home_jailbreak))
+                        }
+                    }
                 }
             }
         }

@@ -125,9 +125,12 @@ object Natives {
 
     val managerUAPIVersion: Int
         external get
+    
+    fun isPreviewMode(): Boolean = !isManager && rootAvailable()
 
     fun isFullFeatured(): Boolean {
         return isManager && kernelUAPIVersion == managerUAPIVersion && rootAvailable()
+                || isPreviewMode()
     }
 
     @Keep

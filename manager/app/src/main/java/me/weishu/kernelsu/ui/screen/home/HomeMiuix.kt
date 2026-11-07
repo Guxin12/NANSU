@@ -166,6 +166,12 @@ fun HomePagerMiuix(
                             state = state,
                             actions = actions,
                         )
+                        if (state.isPreviewMode) {
+                            WarningCard(
+                                message = stringResource(R.string.home_preview_mode),
+                                level = WarningLevel.Notice,
+                            )
+                        }
                         InfoCard(
                             systemInfo = state.systemInfo,
                             modifier = Modifier.fillMaxWidth(),

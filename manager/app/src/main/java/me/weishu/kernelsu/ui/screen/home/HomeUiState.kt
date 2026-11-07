@@ -54,9 +54,13 @@ data class HomeUiState(
 
     val showKernelPrBuildWarning: Boolean
         get() = isManager && !isManagerPrBuild && isKernelPrBuild
+        
+    val isPreviewMode: Boolean
+        get() = ksuVersion == null && isRootAvailable
 
     val hasUpdate: Boolean
         get() = latestVersionInfo.versionCode > currentManagerVersionCode
+
 }
 
 @Immutable

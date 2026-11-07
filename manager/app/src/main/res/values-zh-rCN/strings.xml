@@ -333,6 +333,7 @@
     <string name="settings_navigation_badge">导航栏角标</string>
     <string name="settings_navigation_badge_summary">在导航栏显示已授权应用和已启用模块数量</string>
     <!-- KPM -->
+    <string name="home_preview_mode">未检测到 NanSU 内核。当前已有 root 权限，页面以预览模式打开；内核相关功能不会生效。</string>
     <string name="settings_kpm_summary">使用 KPM 管理内核模块</string>
     <string name="kpm_empty">当前没有安装内核模块</string>
     <string name="kpm_version">版本</string>
